@@ -1,9 +1,8 @@
-import { getStore } from "@netlify/blobs";
+import { getStore, connectLambda } from "@netlify/blobs";
 import crypto from "crypto";
 
 const STORE_NAME = "neverlab-telecom-cs";
 const DB_KEY = "main";
-const store = getStore(STORE_NAME);
 
 const planPrices = {
   "5G 베이직": 55000,
@@ -42,12 +41,12 @@ function emptyDB() {
   };
 }
 
-async function readDB() {
+async function readDB(store) {
   const data = await store.get(DB_KEY, { type: "json" });
   return data || emptyDB();
 }
 
-async function writeDB(data) {
+async function writeDB(store, data) {
   await store.setJSON(DB_KEY, data);
 }
 
@@ -148,22 +147,25 @@ export async function handler(event) {
   }
 
   try {
+    connectLambda(event);
+    const store = getStore(STORE_NAME);
+
     const path = event.path.replace("/.netlify/functions/api", "") || "/";
     const method = event.httpMethod;
-    const data = await readDB();
+    const data = await readDB(store);
 
-    if (method === "POST" && path === "/signup/branch") return await signupBranch(event, data);
-    if (method === "POST" && path === "/signup/employee") return await signupEmployee(event, data);
-    if (method === "POST" && path === "/login") return await login(event, data);
-    if (method === "POST" && path === "/logout") return await logout(event, data);
+    if (method === "POST" && path === "/signup/branch") return await signupBranch(event, data, store);
+    if (method === "POST" && path === "/signup/employee") return await signupEmployee(event, data, store);
+    if (method === "POST" && path === "/login") return await login(event, data, store);
+    if (method === "POST" && path === "/logout") return await logout(event, data, store);
 
     if (method === "GET" && path === "/me") return await me(event, data);
     if (method === "GET" && path === "/branches") return await listBranches(data);
 
     if (method === "GET" && path === "/dashboard") return await dashboard(event, data);
     if (method === "GET" && path === "/customers") return await listCustomers(event, data);
-    if (method === "POST" && path === "/customers") return await createCustomer(event, data);
-    if (method === "PATCH" && path.startsWith("/customers/")) return await updateCustomer(event, path, data);
+    if (method === "POST" && path === "/customers") return await createCustomer(event, data, store);
+    if (method === "PATCH" && path.startsWith("/customers/")) return await updateCustomer(event, path, data, store);
     if (method === "GET" && path === "/logs") return await listLogs(event, data);
 
     return json(404, { ok: false, message: "없는 API 주소야." });
@@ -176,7 +178,7 @@ export async function handler(event) {
   }
 }
 
-async function signupBranch(event, data) {
+async function signupBranch(event, data, store) {
   const body = await readBody(event);
   const branchName = String(body.branchName || "").trim();
   const branchCode = String(body.branchCode || "").trim();
@@ -211,11 +213,11 @@ async function signupBranch(event, data) {
     action: "지점 가입"
   });
 
-  await writeDB(data);
+  await writeDB(store, data);
   return json(201, { ok: true, message: "지점 가입 완료!" });
 }
 
-async function signupEmployee(event, data) {
+async function signupEmployee(event, data, store) {
   const body = await readBody(event);
   const branchName = String(body.branchName || "").trim();
   const employeeName = String(body.employeeName || "").trim();
@@ -261,11 +263,11 @@ async function signupEmployee(event, data) {
     action: "직원 가입"
   });
 
-  await writeDB(data);
+  await writeDB(store, data);
   return json(201, { ok: true, message: "직원 가입 완료!" });
 }
 
-async function login(event, data) {
+async function login(event, data, store) {
   const body = await readBody(event);
   const branchName = String(body.branchName || "").trim();
   const employeeName = String(body.employeeName || "").trim();
@@ -302,7 +304,7 @@ async function login(event, data) {
     action: "로그인"
   });
 
-  await writeDB(data);
+  await writeDB(store, data);
 
   return json(200, {
     ok: true,
@@ -315,7 +317,7 @@ async function login(event, data) {
   });
 }
 
-async function logout(event, data) {
+async function logout(event, data, store) {
   const session = requireSession(data, event);
 
   data.sessions = data.sessions.filter(s => s.token !== session.token);
@@ -328,7 +330,7 @@ async function logout(event, data) {
     action: "로그아웃"
   });
 
-  await writeDB(data);
+  await writeDB(store, data);
   return json(200, { ok: true, message: "로그아웃 완료." });
 }
 
@@ -397,7 +399,7 @@ async function listCustomers(event, data) {
   return json(200, { ok: true, customers });
 }
 
-async function createCustomer(event, data) {
+async function createCustomer(event, data, store) {
   const session = requireSession(data, event);
   const body = await readBody(event);
 
@@ -439,11 +441,11 @@ async function createCustomer(event, data) {
     action: `신규 개통: ${name} / ${phone} / ${plan}`
   });
 
-  await writeDB(data);
+  await writeDB(store, data);
   return json(201, { ok: true, message: "신규 개통 완료." });
 }
 
-async function updateCustomer(event, path, data) {
+async function updateCustomer(event, path, data, store) {
   const session = requireSession(data, event);
   const customerId = decodeURIComponent(path.split("/")[2]);
   const body = await readBody(event);
@@ -492,7 +494,7 @@ async function updateCustomer(event, path, data) {
     action: logText
   });
 
-  await writeDB(data);
+  await writeDB(store, data);
   return json(200, { ok: true, message: "처리 완료." });
 }
 
