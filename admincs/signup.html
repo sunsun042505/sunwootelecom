@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>네버랩텔레콤지점 - 가입</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1f2937;
+    }
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: white;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+    .sub {
+      margin: 0 0 24px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .tab {
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .tab.active {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #fff;
+    }
+    .form-box { display: none; }
+    .form-box.active { display: block; }
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    input, select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+    }
+    input:focus, select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.14);
+    }
+    button.submit {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.submit:hover { background: #1d4ed8; }
+    .msg {
+      margin-top: 14px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+    .error { color: #dc2626; }
+    .success { color: #16a34a; }
+    .link {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .link a {
+      color: #2563eb;
+      font-weight: 700;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>가입</h1>
+    <p class="sub">먼저 지점 가입을 하고, 그 다음 직원 가입을 하면 돼.</p>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="branch">지점 가입</button>
+      <button class="tab" data-tab="employee">직원 가입</button>
+    </div>
+
+    <section id="branch" class="form-box active">
+      <form id="branchForm">
+        <label for="branchName">지점명</label>
+        <input id="branchName" type="text" placeholder="예: 강남중앙점" required />
+
+        <label for="branchCode">지점 코드</label>
+        <input id="branchCode" type="text" placeholder="예: GN001" required />
+
+        <button class="submit" type="submit">지점 가입</button>
+        <div id="branchMessage" class="msg"></div>
+      </form>
+    </section>
+
+    <section id="employee" class="form-box">
+      <form id="employeeForm">
+        <label for="employeeBranchName">소속 지점</label>
+        <select id="employeeBranchName" required>
+          <option value="">지점을 선택해줘</option>
+        </select>
+
+        <label for="employeeName">직원명</label>
+        <input id="employeeName" type="text" placeholder="예: 홍길동" required />
+
+        <label for="employeePassword">비밀번호</label>
+        <input id="employeePassword" type="password" placeholder="4자 이상" minlength="4" required />
+
+        <label for="employeeRole">권한</label>
+        <select id="employeeRole">
+          <option value="staff">직원</option>
+          <option value="manager">매니저</option>
+        </select>
+
+        <button class="submit" type="submit">직원 가입</button>
+        <div id="employeeMessage" class="msg"></div>
+      </form>
+    </section>
+
+    <div class="link">
+      이미 계정이 있으면 <a href="login.html">로그인</a>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "telecom_cs_data";
+
+    function getData() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+        branches: [],
+        employees: [],
+        logs: []
+      };
+    }
+
+    function saveData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function normalize(value) {
+      return value.trim().toLowerCase();
+    }
+
+    function refreshBranchOptions() {
+      const data = getData();
+      const select = document.getElementById("employeeBranchName");
+      select.innerHTML = '<option value="">지점을 선택해줘</option>';
+
+      data.branches.forEach(branch => {
+        const option = document.createElement("option");
+        option.value = branch.branchName;
+        option.textContent = `${branch.branchName} (${branch.branchCode})`;
+        select.appendChild(option);
+      });
+    }
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".form-box").forEach(box => box.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+        refreshBranchOptions();
+      });
+    });
+
+    document.getElementById("branchForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const branchName = document.getElementById("branchName").value.trim();
+      const branchCode = document.getElementById("branchCode").value.trim();
+      const message = document.getElementById("branchMessage");
+
+      const data = getData();
+
+      const nameExists = data.branches.some(b => normalize(b.branchName) === normalize(branchName));
+      const codeExists = data.branches.some(b => normalize(b.branchCode) === normalize(branchCode));
+
+      if (nameExists) {
+        message.className = "msg error";
+        message.textContent = "이미 가입된 지점명이야.";
+        return;
+      }
+
+      if (codeExists) {
+        message.className = "msg error";
+        message.textContent = "이미 사용 중인 지점 코드야.";
+        return;
+      }
+
+      data.branches.push({
+        id: crypto.randomUUID(),
+        branchName,
+        branchCode,
+        createdAt: new Date().toISOString()
+      });
+
+      data.logs.push({
+        id: crypto.randomUUID(),
+        branchName,
+        employeeName: "SYSTEM",
+        action: "지점 가입",
+        createdAt: new Date().toISOString()
+      });
+
+      saveData(data);
+      refreshBranchOptions();
+
+      this.reset();
+      message.className = "msg success";
+      message.textContent = "지점 가입 완료! 이제 직원 가입을 하면 돼.";
+    });
+
+    document.getElementById("employeeForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const branchName = document.getElementById("employeeBranchName").value;
+      const employeeName = document.getElementById("employeeName").value.trim();
+      const password = document.getElementById("employeePassword").value;
+      const role = document.getElementById("employeeRole").value;
+      const message = document.getElementById("employeeMessage");
+
+      const data = getData();
+
+      const branchExists = data.branches.some(b => b.branchName === branchName);
+      if (!branchExists) {
+        message.className = "msg error";
+        message.textContent = "소속 지점을 먼저 선택해줘.";
+        return;
+      }
+
+      const employeeExists = data.employees.some(emp =>
+        normalize(emp.branchName) === normalize(branchName) &&
+        normalize(emp.employeeName) === normalize(employeeName)
+      );
+
+      if (employeeExists) {
+        message.className = "msg error";
+        message.textContent = "이 지점에 이미 같은 직원명이 있어.";
+        return;
+      }
+
+      data.employees.push({
+        id: crypto.randomUUID(),
+        branchName,
+        employeeName,
+        password,
+        role,
+        createdAt: new Date().toISOString()
+      });
+
+      data.logs.push({
+        id: crypto.randomUUID(),
+        branchName,
+        employeeName,
+        action: "직원 가입",
+        createdAt: new Date().toISOString()
+      });
+
+      saveData(data);
+      this.reset();
+      refreshBranchOptions();
+
+      message.className = "msg success";
+      message.textContent = "직원 가입 완료! login.html에서 로그인하면 돼.";
+    });
+
+    refreshBranchOptions();
+  </script>
+</body>
+</html>
