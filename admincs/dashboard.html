@@ -3,186 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>네버랩 텔레콤 - 대시보드</title>
+  <title>네버랩텔레콤 - 대시보드</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f6fb;
-      color: #1f2937;
-    }
-    header {
-      height: 64px;
-      background: #111827;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-    }
-    .logo {
-      font-size: 20px;
-      font-weight: 800;
-    }
-    .user {
-      font-size: 14px;
-      color: #d1d5db;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      min-height: calc(100vh - 64px);
-    }
-    aside {
-      background: white;
-      border-right: 1px solid #e5e7eb;
-      padding: 20px;
-    }
-    nav button {
-      width: 100%;
-      display: block;
-      border: none;
-      background: transparent;
-      text-align: left;
-      padding: 13px 14px;
-      margin-bottom: 8px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-      color: #374151;
-    }
-    nav button.active, nav button:hover {
-      background: #2563eb;
-      color: white;
-    }
-    .logout {
-      margin-top: 24px;
-      width: 100%;
-      padding: 13px;
-      border: none;
-      border-radius: 12px;
-      background: #ef4444;
-      color: white;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    main {
-      padding: 28px;
-    }
-    .title {
-      margin: 0 0 6px;
-      font-size: 28px;
-    }
-    .subtitle {
-      margin: 0 0 24px;
-      color: #6b7280;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(160px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 18px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-    }
-    .card .label {
-      color: #6b7280;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-    .card .value {
-      font-size: 28px;
-      font-weight: 900;
-    }
-    .section {
-      display: none;
-    }
-    .section.active {
-      display: block;
-    }
-    .panel {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-      margin-bottom: 20px;
-    }
-    .panel h2 {
-      margin: 0 0 16px;
-      font-size: 20px;
-    }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      font-size: 15px;
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr auto;
-      gap: 10px;
-      align-items: end;
-    }
-    .btn {
-      padding: 12px 16px;
-      border: none;
-      border-radius: 12px;
-      background: #2563eb;
-      color: white;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .btn.gray { background: #6b7280; }
-    .btn.red { background: #dc2626; }
-    .btn.green { background: #16a34a; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 13px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
-      font-size: 14px;
-    }
-    th {
-      color: #6b7280;
-      background: #f9fafb;
-    }
-    .badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      background: #e5e7eb;
-    }
-    .badge.active { background: #dcfce7; color: #166534; }
-    .badge.stop { background: #fee2e2; color: #991b1b; }
-    .empty {
-      color: #6b7280;
-      padding: 18px 0;
-    }
-    @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; }
-      aside { border-right: none; border-bottom: 1px solid #e5e7eb; }
-      .cards { grid-template-columns: 1fr 1fr; }
-      .row { grid-template-columns: 1fr; }
-    }
-  </style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f6fb;
+  color: #1f2937;
+}
+a { color: #2563eb; font-weight: 800; text-decoration: none; }
+.auth-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+h1 { margin: 0 0 8px; }
+.sub { margin: 0 0 24px; color: #6b7280; }
+label { display:block; margin: 14px 0 6px; font-weight: 800; font-size:14px; }
+input, select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+}
+input:focus, select:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.14); }
+button {
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 900;
+}
+.primary {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+}
+.primary:hover { background:#1d4ed8; }
+.msg { margin-top: 14px; min-height: 20px; font-size: 14px; }
+.error { color:#dc2626; }
+.success { color:#16a34a; }
+.link { margin-top:20px; text-align:center; font-size:14px; }
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.tab {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+}
+.tab.active { background: #2563eb; color: #fff; border-color:#2563eb; }
+.form-box { display: none; }
+.form-box.active { display: block; }
+
+header {
+  height: 64px;
+  background: #111827;
+  color: white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 0 24px;
+}
+.logo { font-size:20px; font-weight:900; }
+.user { font-size:14px; color:#d1d5db; }
+.layout {
+  display:grid;
+  grid-template-columns:240px 1fr;
+  min-height:calc(100vh - 64px);
+}
+aside {
+  background:#fff;
+  border-right:1px solid #e5e7eb;
+  padding:20px;
+}
+nav button {
+  width:100%;
+  display:block;
+  text-align:left;
+  padding:13px 14px;
+  margin-bottom:8px;
+  background:transparent;
+  color:#374151;
+}
+nav button.active, nav button:hover { background:#2563eb; color:#fff; }
+.logout {
+  margin-top:24px;
+  width:100%;
+  padding:13px;
+  background:#ef4444;
+  color:white;
+}
+main { padding:28px; }
+.title { margin:0 0 6px; font-size:28px; }
+.cards {
+  display:grid;
+  grid-template-columns:repeat(4, minmax(160px, 1fr));
+  gap:16px;
+  margin-bottom:24px;
+}
+.card, .panel {
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.06);
+}
+.card { padding:20px; }
+.label-small { color:#6b7280; font-size:14px; margin-bottom:10px; }
+.value { font-size:28px; font-weight:900; }
+.panel { padding:22px; margin-bottom:20px; }
+.panel h2 { margin:0 0 16px; font-size:20px; }
+.section { display:none; }
+.section.active { display:block; }
+.row {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr auto;
+  gap:10px;
+  align-items:end;
+}
+.btn {
+  padding:12px 16px;
+  background:#2563eb;
+  color:white;
+  white-space:nowrap;
+}
+.btn.green { background:#16a34a; }
+.btn.red { background:#dc2626; }
+.btn.gray { background:#6b7280; }
+table { width:100%; border-collapse:collapse; }
+th, td {
+  padding:13px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+  font-size:14px;
+}
+th { background:#f9fafb; color:#6b7280; }
+.badge {
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  background:#e5e7eb;
+}
+.badge.active { background:#dcfce7; color:#166534; }
+.badge.stop { background:#fee2e2; color:#991b1b; }
+.empty { color:#6b7280; padding:18px 0; }
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  aside { border-right:none; border-bottom:1px solid #e5e7eb; }
+  .cards { grid-template-columns:1fr 1fr; }
+  .row { grid-template-columns:1fr; }
+}
+</style>
 </head>
 <body>
   <header>
-    <div class="logo">통신 CS 시스템</div>
-    <div class="user" id="userInfo"></div>
+    <div class="logo">네버랩텔레콤</div>
+    <div class="user" id="userInfo">로그인 확인 중...</div>
   </header>
 
   <div class="layout">
@@ -200,16 +196,15 @@
 
     <main>
       <h1 class="title" id="pageTitle">대시보드</h1>
-      <p class="subtitle">지점 고객 응대용 CS 프로그램</p>
+      <p class="sub">네버랩텔레콤 지점 고객 응대용 CS 프로그램</p>
 
       <section id="home" class="section active">
         <div class="cards">
-          <div class="card"><div class="label">총 고객</div><div class="value" id="totalCustomers">0</div></div>
-          <div class="card"><div class="label">정상 회선</div><div class="value" id="activeLines">0</div></div>
-          <div class="card"><div class="label">미납 고객</div><div class="value" id="unpaidCustomers">0</div></div>
-          <div class="card"><div class="label">오늘 로그</div><div class="value" id="todayLogs">0</div></div>
+          <div class="card"><div class="label-small">총 고객</div><div class="value" id="totalCustomers">0</div></div>
+          <div class="card"><div class="label-small">정상 회선</div><div class="value" id="activeLines">0</div></div>
+          <div class="card"><div class="label-small">미납 고객</div><div class="value" id="unpaidCustomers">0</div></div>
+          <div class="card"><div class="label-small">오늘 로그</div><div class="value" id="todayLogs">0</div></div>
         </div>
-
         <div class="panel">
           <h2>최근 로그</h2>
           <div id="recentLogs"></div>
@@ -220,10 +215,7 @@
         <div class="panel">
           <h2>고객 검색</h2>
           <div class="row">
-            <div>
-              <label>전화번호</label>
-              <input id="searchPhone" placeholder="010-1234-5678" />
-            </div>
+            <div><label>전화번호</label><input id="searchPhone" placeholder="010-1234-5678" /></div>
             <button class="btn" onclick="searchCustomer()">검색</button>
           </div>
           <div id="customerResult" style="margin-top:16px;"></div>
@@ -239,15 +231,14 @@
             <div>
               <label>요금제</label>
               <select id="newPlan">
-                <option value="5G 베이직">5G 베이직 / 55000</option>
-                <option value="5G 스탠다드">5G 스탠다드 / 75000</option>
-                <option value="LTE 라이트">LTE 라이트 / 33000</option>
+                <option value="5G 베이직">5G 베이직 / 55,000원</option>
+                <option value="5G 스탠다드">5G 스탠다드 / 75,000원</option>
+                <option value="LTE 라이트">LTE 라이트 / 33,000원</option>
               </select>
             </div>
             <button class="btn green" onclick="createCustomer()">개통</button>
           </div>
         </div>
-
         <div class="panel">
           <h2>고객 목록 / 해지</h2>
           <div id="customerTable"></div>
@@ -278,77 +269,51 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "telecom_cs_data";
-    const SESSION_KEY = "telecom_cs_session";
+    const API = "/.netlify/functions/api";
+    const TOKEN_KEY = "neverlab_token";
+    let token = localStorage.getItem(TOKEN_KEY);
+    let user = null;
+    let customers = [];
 
-    const planPrices = {
-      "5G 베이직": 55000,
-      "5G 스탠다드": 75000,
-      "LTE 라이트": 33000
-    };
-
-    let session = JSON.parse(localStorage.getItem(SESSION_KEY));
-
-    if (!session) {
-      alert("로그인이 필요해.");
-      location.href = "login.html";
+    function money(n) {
+      return Number(n || 0).toLocaleString("ko-KR") + "원";
     }
 
-    function getData() {
-      const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-        branches: [],
-        employees: [],
-        customers: [],
-        logs: []
+    function authHeaders() {
+      return {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
       };
-      if (!data.customers) data.customers = [];
-      if (!data.logs) data.logs = [];
+    }
+
+    async function api(path, options = {}) {
+      const res = await fetch(API + path, {
+        ...options,
+        headers: {
+          ...authHeaders(),
+          ...(options.headers || {})
+        }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "요청 실패");
       return data;
     }
 
-    function saveData(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-
-    function addLog(action) {
-      const data = getData();
-      data.logs.push({
-        id: crypto.randomUUID(),
-        branchName: session.branchName,
-        employeeName: session.employeeName,
-        action,
-        createdAt: new Date().toISOString()
-      });
-      saveData(data);
-      renderAll();
-    }
-
-    function money(n) {
-      return Number(n).toLocaleString("ko-KR") + "원";
-    }
-
-    function currentBranchCustomers() {
-      const data = getData();
-      return data.customers.filter(c => c.branchName === session.branchName);
-    }
-
-    function renderStats() {
-      const data = getData();
-      const customers = currentBranchCustomers();
-      const today = new Date().toISOString().slice(0, 10);
-      const branchLogs = data.logs.filter(l => l.branchName === session.branchName);
-
-      document.getElementById("totalCustomers").textContent = customers.length;
-      document.getElementById("activeLines").textContent = customers.filter(c => c.status === "active").length;
-      document.getElementById("unpaidCustomers").textContent = customers.filter(c => c.unpaid).length;
-      document.getElementById("todayLogs").textContent = branchLogs.filter(l => l.createdAt.slice(0,10) === today).length;
-
-      renderLogs("recentLogs", branchLogs.slice(-5).reverse());
+    async function requireLogin() {
+      if (!token) location.href = "login.html";
+      try {
+        const data = await api("/me");
+        user = data.user;
+        document.getElementById("userInfo").textContent = `${user.branchName} / ${user.employeeName} (${user.role})`;
+      } catch {
+        localStorage.removeItem(TOKEN_KEY);
+        location.href = "login.html";
+      }
     }
 
     function renderLogs(targetId, logs) {
       const el = document.getElementById(targetId);
-      if (!logs.length) {
+      if (!logs || !logs.length) {
         el.innerHTML = '<div class="empty">아직 로그가 없어.</div>';
         return;
       }
@@ -358,28 +323,42 @@
           <tbody>
             ${logs.map(l => `
               <tr>
-                <td>${new Date(l.createdAt).toLocaleString("ko-KR")}</td>
-                <td>${l.employeeName}</td>
+                <td>${new Date(l.created_at || l.createdAt).toLocaleString("ko-KR")}</td>
+                <td>${l.employee_name || l.employeeName}</td>
                 <td>${l.action}</td>
               </tr>
             `).join("")}
           </tbody>
-        </table>`;
+        </table>
+      `;
+    }
+
+    async function loadDashboard() {
+      const data = await api("/dashboard");
+      document.getElementById("totalCustomers").textContent = data.stats.totalCustomers;
+      document.getElementById("activeLines").textContent = data.stats.activeLines;
+      document.getElementById("unpaidCustomers").textContent = data.stats.unpaidCustomers;
+      document.getElementById("todayLogs").textContent = data.stats.todayLogs;
+      renderLogs("recentLogs", data.recentLogs);
+    }
+
+    async function loadCustomers() {
+      const data = await api("/customers");
+      customers = data.customers;
+      renderCustomerTable();
+      renderBillingTable();
+      renderUsageTable();
     }
 
     function renderCustomerTable() {
-      const customers = currentBranchCustomers();
       const el = document.getElementById("customerTable");
       if (!customers.length) {
         el.innerHTML = '<div class="empty">등록된 고객이 없어.</div>';
         return;
       }
-
       el.innerHTML = `
         <table>
-          <thead>
-            <tr><th>고객명</th><th>전화번호</th><th>요금제</th><th>상태</th><th>처리</th></tr>
-          </thead>
+          <thead><tr><th>고객명</th><th>전화번호</th><th>요금제</th><th>상태</th><th>처리</th></tr></thead>
           <tbody>
             ${customers.map(c => `
               <tr>
@@ -389,28 +368,25 @@
                 <td><span class="badge ${c.status === "active" ? "active" : "stop"}">${c.status === "active" ? "정상" : "해지"}</span></td>
                 <td>
                   ${c.status === "active"
-                    ? `<button class="btn red" onclick="closeLine('${c.id}')">해지</button>`
-                    : `<button class="btn green" onclick="reopenLine('${c.id}')">재개통</button>`}
+                    ? `<button class="btn red" onclick="customerAction('${c.id}', 'close')">해지</button>`
+                    : `<button class="btn green" onclick="customerAction('${c.id}', 'reopen')">재개통</button>`}
                 </td>
               </tr>
             `).join("")}
           </tbody>
-        </table>`;
+        </table>
+      `;
     }
 
     function renderBillingTable() {
-      const customers = currentBranchCustomers();
       const el = document.getElementById("billingTable");
       if (!customers.length) {
         el.innerHTML = '<div class="empty">요금 관리할 고객이 없어.</div>';
         return;
       }
-
       el.innerHTML = `
         <table>
-          <thead>
-            <tr><th>고객명</th><th>전화번호</th><th>월 요금</th><th>미납</th><th>처리</th></tr>
-          </thead>
+          <thead><tr><th>고객명</th><th>전화번호</th><th>월 요금</th><th>미납</th><th>처리</th></tr></thead>
           <tbody>
             ${customers.map(c => `
               <tr>
@@ -420,28 +396,25 @@
                 <td>${c.unpaid ? "미납" : "정상"}</td>
                 <td>
                   ${c.unpaid
-                    ? `<button class="btn green" onclick="payBill('${c.id}')">납부 처리</button>`
-                    : `<button class="btn gray" onclick="makeUnpaid('${c.id}')">미납 처리</button>`}
+                    ? `<button class="btn green" onclick="customerAction('${c.id}', 'pay')">납부 처리</button>`
+                    : `<button class="btn gray" onclick="customerAction('${c.id}', 'unpaid')">미납 처리</button>`}
                 </td>
               </tr>
             `).join("")}
           </tbody>
-        </table>`;
+        </table>
+      `;
     }
 
     function renderUsageTable() {
-      const customers = currentBranchCustomers();
       const el = document.getElementById("usageTable");
       if (!customers.length) {
         el.innerHTML = '<div class="empty">사용량 표시할 고객이 없어.</div>';
         return;
       }
-
       el.innerHTML = `
         <table>
-          <thead>
-            <tr><th>고객명</th><th>전화번호</th><th>데이터</th><th>통화</th><th>문자</th><th>증가</th></tr>
-          </thead>
+          <thead><tr><th>고객명</th><th>전화번호</th><th>데이터</th><th>통화</th><th>문자</th><th>증가</th></tr></thead>
           <tbody>
             ${customers.map(c => `
               <tr>
@@ -451,31 +424,29 @@
                 <td>${c.usage.call}분</td>
                 <td>${c.usage.sms}건</td>
                 <td>
-                  <button class="btn" onclick="increaseUsage('${c.id}', 'data')">데이터 +1</button>
-                  <button class="btn" onclick="increaseUsage('${c.id}', 'call')">통화 +10</button>
-                  <button class="btn" onclick="increaseUsage('${c.id}', 'sms')">문자 +5</button>
+                  <button class="btn" onclick="customerAction('${c.id}', 'usage', 'data')">데이터 +1</button>
+                  <button class="btn" onclick="customerAction('${c.id}', 'usage', 'call')">통화 +10</button>
+                  <button class="btn" onclick="customerAction('${c.id}', 'usage', 'sms')">문자 +5</button>
                 </td>
               </tr>
             `).join("")}
           </tbody>
-        </table>`;
+        </table>
+      `;
     }
 
-    function renderAll() {
-      if (!session) return;
-      document.getElementById("userInfo").textContent =
-        `${session.branchName} / ${session.employeeName} (${session.role})`;
-      renderStats();
-      renderCustomerTable();
-      renderBillingTable();
-      renderUsageTable();
-
-      const data = getData();
-      const branchLogs = data.logs.filter(l => l.branchName === session.branchName).slice().reverse();
-      renderLogs("logTable", branchLogs);
+    async function loadLogs() {
+      const data = await api("/logs");
+      renderLogs("logTable", data.logs);
     }
 
-    function createCustomer() {
+    async function refreshAll() {
+      await loadDashboard();
+      await loadCustomers();
+      await loadLogs();
+    }
+
+    async function createCustomer() {
       const name = document.getElementById("newName").value.trim();
       const phone = document.getElementById("newPhone").value.trim();
       const plan = document.getElementById("newPlan").value;
@@ -485,116 +456,81 @@
         return;
       }
 
-      const data = getData();
-      const duplicate = data.customers.some(c => c.phone === phone);
-
-      if (duplicate) {
-        alert("이미 등록된 전화번호야.");
-        return;
+      try {
+        await api("/customers", {
+          method: "POST",
+          body: JSON.stringify({ name, phone, plan })
+        });
+        document.getElementById("newName").value = "";
+        document.getElementById("newPhone").value = "";
+        await refreshAll();
+      } catch (err) {
+        alert(err.message);
       }
-
-      data.customers.push({
-        id: crypto.randomUUID(),
-        branchName: session.branchName,
-        name,
-        phone,
-        plan,
-        monthlyFee: planPrices[plan],
-        unpaid: false,
-        status: "active",
-        usage: { data: 0, call: 0, sms: 0 },
-        createdAt: new Date().toISOString()
-      });
-
-      saveData(data);
-      addLog(`신규 개통: ${name} / ${phone} / ${plan}`);
-
-      document.getElementById("newName").value = "";
-      document.getElementById("newPhone").value = "";
     }
 
-    function updateCustomer(id, updater, logText) {
-      const data = getData();
-      const target = data.customers.find(c => c.id === id && c.branchName === session.branchName);
-      if (!target) return;
-      updater(target);
-      saveData(data);
-      addLog(logText);
+    async function customerAction(id, action, type) {
+      try {
+        await api("/customers/" + encodeURIComponent(id), {
+          method: "PATCH",
+          body: JSON.stringify({ action, type })
+        });
+        await refreshAll();
+      } catch (err) {
+        alert(err.message);
+      }
     }
 
-    function closeLine(id) {
-      updateCustomer(id, c => c.status = "closed", "회선 해지 처리");
-    }
-
-    function reopenLine(id) {
-      updateCustomer(id, c => c.status = "active", "회선 재개통 처리");
-    }
-
-    function payBill(id) {
-      updateCustomer(id, c => c.unpaid = false, "요금 납부 처리");
-    }
-
-    function makeUnpaid(id) {
-      updateCustomer(id, c => c.unpaid = true, "요금 미납 처리");
-    }
-
-    function increaseUsage(id, type) {
-      updateCustomer(id, c => {
-        if (type === "data") c.usage.data += 1;
-        if (type === "call") c.usage.call += 10;
-        if (type === "sms") c.usage.sms += 5;
-      }, `사용량 증가: ${type}`);
-    }
-
-    function searchCustomer() {
+    async function searchCustomer() {
       const phone = document.getElementById("searchPhone").value.trim();
-      const customer = currentBranchCustomers().find(c => c.phone.includes(phone));
-      const el = document.getElementById("customerResult");
-
       if (!phone) {
         alert("전화번호를 입력해줘.");
         return;
       }
 
-      if (!customer) {
+      const data = await api("/customers?phone=" + encodeURIComponent(phone));
+      const el = document.getElementById("customerResult");
+
+      if (!data.customers.length) {
         el.innerHTML = '<div class="empty">검색 결과가 없어.</div>';
-        addLog(`고객 조회 실패: ${phone}`);
         return;
       }
 
+      const c = data.customers[0];
       el.innerHTML = `
         <table>
-          <tr><th>고객명</th><td>${customer.name}</td></tr>
-          <tr><th>전화번호</th><td>${customer.phone}</td></tr>
-          <tr><th>요금제</th><td>${customer.plan}</td></tr>
-          <tr><th>월 요금</th><td>${money(customer.monthlyFee)}</td></tr>
-          <tr><th>회선 상태</th><td>${customer.status === "active" ? "정상" : "해지"}</td></tr>
-          <tr><th>미납 여부</th><td>${customer.unpaid ? "미납" : "정상"}</td></tr>
-          <tr><th>사용량</th><td>데이터 ${customer.usage.data}GB / 통화 ${customer.usage.call}분 / 문자 ${customer.usage.sms}건</td></tr>
+          <tr><th>고객명</th><td>${c.name}</td></tr>
+          <tr><th>전화번호</th><td>${c.phone}</td></tr>
+          <tr><th>요금제</th><td>${c.plan}</td></tr>
+          <tr><th>월 요금</th><td>${money(c.monthlyFee)}</td></tr>
+          <tr><th>회선 상태</th><td>${c.status === "active" ? "정상" : "해지"}</td></tr>
+          <tr><th>미납 여부</th><td>${c.unpaid ? "미납" : "정상"}</td></tr>
+          <tr><th>사용량</th><td>데이터 ${c.usage.data}GB / 통화 ${c.usage.call}분 / 문자 ${c.usage.sms}건</td></tr>
         </table>
       `;
-      addLog(`고객 조회: ${customer.name} / ${customer.phone}`);
     }
 
     document.querySelectorAll("nav button[data-section]").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
         document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-
         btn.classList.add("active");
         document.getElementById(btn.dataset.section).classList.add("active");
         document.getElementById("pageTitle").textContent = btn.textContent;
-        renderAll();
+        await refreshAll();
       });
     });
 
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      addLog("로그아웃");
-      localStorage.removeItem(SESSION_KEY);
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      try { await api("/logout", { method: "POST" }); } catch {}
+      localStorage.removeItem(TOKEN_KEY);
       location.href = "login.html";
     });
 
-    renderAll();
+    (async () => {
+      await requireLogin();
+      await refreshAll();
+    })();
   </script>
 </body>
 </html>

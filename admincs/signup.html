@@ -3,112 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>네버랩 텔레콤 - 가입</title>
+  <title>네버랩텔레콤 - 가입</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f6fb;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #1f2937;
-    }
-    .card {
-      width: 100%;
-      max-width: 520px;
-      background: white;
-      padding: 32px;
-      border-radius: 18px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.08);
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 26px;
-    }
-    .sub {
-      margin: 0 0 24px;
-      color: #6b7280;
-      font-size: 14px;
-    }
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-    .tab {
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      background: #fff;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-    .tab.active {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: #fff;
-    }
-    .form-box { display: none; }
-    .form-box.active { display: block; }
-    label {
-      display: block;
-      margin: 14px 0 6px;
-      font-weight: 700;
-      font-size: 14px;
-    }
-    input, select {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      font-size: 15px;
-      outline: none;
-      background: white;
-    }
-    input:focus, select:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.14);
-    }
-    button.submit {
-      width: 100%;
-      margin-top: 22px;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    button.submit:hover { background: #1d4ed8; }
-    .msg {
-      margin-top: 14px;
-      font-size: 14px;
-      min-height: 20px;
-    }
-    .error { color: #dc2626; }
-    .success { color: #16a34a; }
-    .link {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 14px;
-    }
-    .link a {
-      color: #2563eb;
-      font-weight: 700;
-      text-decoration: none;
-    }
-  </style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f6fb;
+  color: #1f2937;
+}
+a { color: #2563eb; font-weight: 800; text-decoration: none; }
+.auth-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+h1 { margin: 0 0 8px; }
+.sub { margin: 0 0 24px; color: #6b7280; }
+label { display:block; margin: 14px 0 6px; font-weight: 800; font-size:14px; }
+input, select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+}
+input:focus, select:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.14); }
+button {
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 900;
+}
+.primary {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+}
+.primary:hover { background:#1d4ed8; }
+.msg { margin-top: 14px; min-height: 20px; font-size: 14px; }
+.error { color:#dc2626; }
+.success { color:#16a34a; }
+.link { margin-top:20px; text-align:center; font-size:14px; }
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.tab {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+}
+.tab.active { background: #2563eb; color: #fff; border-color:#2563eb; }
+.form-box { display: none; }
+.form-box.active { display: block; }
+
+header {
+  height: 64px;
+  background: #111827;
+  color: white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 0 24px;
+}
+.logo { font-size:20px; font-weight:900; }
+.user { font-size:14px; color:#d1d5db; }
+.layout {
+  display:grid;
+  grid-template-columns:240px 1fr;
+  min-height:calc(100vh - 64px);
+}
+aside {
+  background:#fff;
+  border-right:1px solid #e5e7eb;
+  padding:20px;
+}
+nav button {
+  width:100%;
+  display:block;
+  text-align:left;
+  padding:13px 14px;
+  margin-bottom:8px;
+  background:transparent;
+  color:#374151;
+}
+nav button.active, nav button:hover { background:#2563eb; color:#fff; }
+.logout {
+  margin-top:24px;
+  width:100%;
+  padding:13px;
+  background:#ef4444;
+  color:white;
+}
+main { padding:28px; }
+.title { margin:0 0 6px; font-size:28px; }
+.cards {
+  display:grid;
+  grid-template-columns:repeat(4, minmax(160px, 1fr));
+  gap:16px;
+  margin-bottom:24px;
+}
+.card, .panel {
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.06);
+}
+.card { padding:20px; }
+.label-small { color:#6b7280; font-size:14px; margin-bottom:10px; }
+.value { font-size:28px; font-weight:900; }
+.panel { padding:22px; margin-bottom:20px; }
+.panel h2 { margin:0 0 16px; font-size:20px; }
+.section { display:none; }
+.section.active { display:block; }
+.row {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr auto;
+  gap:10px;
+  align-items:end;
+}
+.btn {
+  padding:12px 16px;
+  background:#2563eb;
+  color:white;
+  white-space:nowrap;
+}
+.btn.green { background:#16a34a; }
+.btn.red { background:#dc2626; }
+.btn.gray { background:#6b7280; }
+table { width:100%; border-collapse:collapse; }
+th, td {
+  padding:13px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+  font-size:14px;
+}
+th { background:#f9fafb; color:#6b7280; }
+.badge {
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  background:#e5e7eb;
+}
+.badge.active { background:#dcfce7; color:#166534; }
+.badge.stop { background:#fee2e2; color:#991b1b; }
+.empty { color:#6b7280; padding:18px 0; }
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  aside { border-right:none; border-bottom:1px solid #e5e7eb; }
+  .cards { grid-template-columns:1fr 1fr; }
+  .row { grid-template-columns:1fr; }
+}
+</style>
 </head>
-<body>
-  <main class="card">
-    <h1>가입</h1>
-    <p class="sub">먼저 지점 가입을 하고, 그 다음 직원 가입을 하면 돼.</p>
+<body class="auth-body">
+  <main class="auth-card">
+    <h1>네버랩텔레콤 가입</h1>
+    <p class="sub">지점 가입 후 직원 가입을 하면 돼.</p>
 
     <div class="tabs">
       <button class="tab active" data-tab="branch">지점 가입</button>
@@ -123,7 +193,7 @@
         <label for="branchCode">지점 코드</label>
         <input id="branchCode" type="text" placeholder="예: GN001" required />
 
-        <button class="submit" type="submit">지점 가입</button>
+        <button class="primary" type="submit">지점 가입</button>
         <div id="branchMessage" class="msg"></div>
       </form>
     </section>
@@ -147,161 +217,107 @@
           <option value="manager">매니저</option>
         </select>
 
-        <button class="submit" type="submit">직원 가입</button>
+        <button class="primary" type="submit">직원 가입</button>
         <div id="employeeMessage" class="msg"></div>
       </form>
     </section>
 
-    <div class="link">
-      이미 계정이 있으면 <a href="login.html">로그인</a>
-    </div>
+    <div class="link">이미 계정이 있으면 <a href="login.html">로그인</a></div>
   </main>
 
   <script>
-    const STORAGE_KEY = "telecom_cs_data";
+    const API = "/.netlify/functions/api";
 
-    function getData() {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-        branches: [],
-        employees: [],
-        logs: []
-      };
+    async function api(path, options = {}) {
+      const res = await fetch(API + path, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "요청 실패");
+      return data;
     }
 
-    function saveData(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-
-    function normalize(value) {
-      return value.trim().toLowerCase();
-    }
-
-    function refreshBranchOptions() {
-      const data = getData();
+    async function refreshBranches() {
       const select = document.getElementById("employeeBranchName");
       select.innerHTML = '<option value="">지점을 선택해줘</option>';
-
-      data.branches.forEach(branch => {
-        const option = document.createElement("option");
-        option.value = branch.branchName;
-        option.textContent = `${branch.branchName} (${branch.branchCode})`;
-        select.appendChild(option);
-      });
+      try {
+        const data = await api("/branches");
+        data.branches.forEach(branch => {
+          const option = document.createElement("option");
+          option.value = branch.branch_name;
+          option.textContent = `${branch.branch_name} (${branch.branch_code})`;
+          select.appendChild(option);
+        });
+      } catch (err) {
+        console.warn(err);
+      }
     }
 
     document.querySelectorAll(".tab").forEach(tab => {
       tab.addEventListener("click", () => {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         document.querySelectorAll(".form-box").forEach(box => box.classList.remove("active"));
-
         tab.classList.add("active");
         document.getElementById(tab.dataset.tab).classList.add("active");
-        refreshBranchOptions();
+        refreshBranches();
       });
     });
 
-    document.getElementById("branchForm").addEventListener("submit", function(e) {
+    document.getElementById("branchForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const branchName = document.getElementById("branchName").value.trim();
-      const branchCode = document.getElementById("branchCode").value.trim();
       const message = document.getElementById("branchMessage");
+      message.className = "msg";
+      message.textContent = "처리 중...";
 
-      const data = getData();
-
-      const nameExists = data.branches.some(b => normalize(b.branchName) === normalize(branchName));
-      const codeExists = data.branches.some(b => normalize(b.branchCode) === normalize(branchCode));
-
-      if (nameExists) {
+      try {
+        const data = await api("/signup/branch", {
+          method: "POST",
+          body: JSON.stringify({
+            branchName: document.getElementById("branchName").value.trim(),
+            branchCode: document.getElementById("branchCode").value.trim()
+          })
+        });
+        e.target.reset();
+        await refreshBranches();
+        message.className = "msg success";
+        message.textContent = data.message;
+      } catch (err) {
         message.className = "msg error";
-        message.textContent = "이미 가입된 지점명이야.";
-        return;
+        message.textContent = err.message;
       }
-
-      if (codeExists) {
-        message.className = "msg error";
-        message.textContent = "이미 사용 중인 지점 코드야.";
-        return;
-      }
-
-      data.branches.push({
-        id: crypto.randomUUID(),
-        branchName,
-        branchCode,
-        createdAt: new Date().toISOString()
-      });
-
-      data.logs.push({
-        id: crypto.randomUUID(),
-        branchName,
-        employeeName: "SYSTEM",
-        action: "지점 가입",
-        createdAt: new Date().toISOString()
-      });
-
-      saveData(data);
-      refreshBranchOptions();
-
-      this.reset();
-      message.className = "msg success";
-      message.textContent = "지점 가입 완료! 이제 직원 가입을 하면 돼.";
     });
 
-    document.getElementById("employeeForm").addEventListener("submit", function(e) {
+    document.getElementById("employeeForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const branchName = document.getElementById("employeeBranchName").value;
-      const employeeName = document.getElementById("employeeName").value.trim();
-      const password = document.getElementById("employeePassword").value;
-      const role = document.getElementById("employeeRole").value;
       const message = document.getElementById("employeeMessage");
+      message.className = "msg";
+      message.textContent = "처리 중...";
 
-      const data = getData();
-
-      const branchExists = data.branches.some(b => b.branchName === branchName);
-      if (!branchExists) {
+      try {
+        const data = await api("/signup/employee", {
+          method: "POST",
+          body: JSON.stringify({
+            branchName: document.getElementById("employeeBranchName").value,
+            employeeName: document.getElementById("employeeName").value.trim(),
+            password: document.getElementById("employeePassword").value,
+            role: document.getElementById("employeeRole").value
+          })
+        });
+        e.target.reset();
+        await refreshBranches();
+        message.className = "msg success";
+        message.textContent = data.message + " 로그인하면 돼.";
+      } catch (err) {
         message.className = "msg error";
-        message.textContent = "소속 지점을 먼저 선택해줘.";
-        return;
+        message.textContent = err.message;
       }
-
-      const employeeExists = data.employees.some(emp =>
-        normalize(emp.branchName) === normalize(branchName) &&
-        normalize(emp.employeeName) === normalize(employeeName)
-      );
-
-      if (employeeExists) {
-        message.className = "msg error";
-        message.textContent = "이 지점에 이미 같은 직원명이 있어.";
-        return;
-      }
-
-      data.employees.push({
-        id: crypto.randomUUID(),
-        branchName,
-        employeeName,
-        password,
-        role,
-        createdAt: new Date().toISOString()
-      });
-
-      data.logs.push({
-        id: crypto.randomUUID(),
-        branchName,
-        employeeName,
-        action: "직원 가입",
-        createdAt: new Date().toISOString()
-      });
-
-      saveData(data);
-      this.reset();
-      refreshBranchOptions();
-
-      message.className = "msg success";
-      message.textContent = "직원 가입 완료! login.html에서 로그인하면 돼.";
     });
 
-    refreshBranchOptions();
+    refreshBranches();
   </script>
 </body>
 </html>

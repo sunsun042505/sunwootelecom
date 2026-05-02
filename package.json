@@ -1,0 +1,16 @@
+{
+  "name": "neverlab-telecom",
+  "version": "1.0.0",
+  "description": "네버랩텔레콤 지점 CS 프로그램 - Netlify Database 버전",
+  "type": "module",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo \"static html app\""
+  },
+  "dependencies": {
+    "@netlify/database": "^0.1.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "latest"
+  }
+}
