@@ -66,8 +66,42 @@ function verifyPassword(password, stored) {
   return crypto.timingSafeEqual(Buffer.from(candidate), Buffer.from(originalHash));
 }
 
-function createToken() {
-  return crypto.randomBytes(32).toString("hex");
+function tokenSecret() {
+  return process.env.NEVERLAB_TOKEN_SECRET || "neverlab-dev-token-secret-change-later";
+}
+
+function base64url(input) {
+  return Buffer.from(input).toString("base64url");
+}
+
+function signToken(payload) {
+  const body = base64url(JSON.stringify(payload));
+  const sig = crypto
+    .createHmac("sha256", tokenSecret())
+    .update(body)
+    .digest("base64url");
+  return `${body}.${sig}`;
+}
+
+function verifyToken(token) {
+  if (!token || !token.includes(".")) return null;
+  const [body, sig] = token.split(".");
+  const expected = crypto
+    .createHmac("sha256", tokenSecret())
+    .update(body)
+    .digest("base64url");
+
+  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) {
+    return null;
+  }
+
+  try {
+    const payload = JSON.parse(Buffer.from(body, "base64url").toString("utf8"));
+    if (!payload.branchId || !payload.employeeId) return null;
+    return payload;
+  } catch {
+    return null;
+  }
 }
 
 function now() {
@@ -93,13 +127,11 @@ function getToken(event) {
 
 function getSession(data, event) {
   const token = getToken(event);
-  if (!token) return null;
+  const payload = verifyToken(token);
+  if (!payload) return null;
 
-  const session = data.sessions.find(s => s.token === token);
-  if (!session) return null;
-
-  const branch = data.branches.find(b => b.id === session.branchId);
-  const employee = data.employees.find(e => e.id === session.employeeId);
+  const branch = data.branches.find(b => b.id === payload.branchId);
+  const employee = data.employees.find(e => e.id === payload.employeeId);
 
   if (!branch || !employee) return null;
 
@@ -287,13 +319,10 @@ async function login(event, data, store) {
     return json(401, { ok: false, message: "지점명, 직원명 또는 비밀번호가 맞지 않아." });
   }
 
-  const token = createToken();
-
-  data.sessions.push({
-    token,
+  const token = signToken({
     branchId: branch.id,
     employeeId: employee.id,
-    createdAt: now()
+    iat: Date.now()
   });
 
   addLog(data, {
@@ -319,8 +348,6 @@ async function login(event, data, store) {
 
 async function logout(event, data, store) {
   const session = requireSession(data, event);
-
-  data.sessions = data.sessions.filter(s => s.token !== session.token);
 
   addLog(data, {
     branchId: session.branchId,
