@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = "npm install"
+  command = "echo \"static html app\""
 
 [functions]
   directory = "netlify/functions"

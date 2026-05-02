@@ -8,7 +8,7 @@
     "build": "echo \"static html app\""
   },
   "dependencies": {
-    "@netlify/database": "^0.1.0"
+    "@netlify/database": "latest"
   },
   "devDependencies": {
     "netlify-cli": "latest"
