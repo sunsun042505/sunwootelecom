@@ -1,4 +1,11 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>네버랩텔레콤 - 신규가입</title><style>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>네버랩텔레콤 - 신규가입 신청서</title>
+  <style>
+
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -168,21 +175,354 @@ th { background:#f9fafb; color:#6b7280; }
   .row { grid-template-columns:1fr; }
 }
 
-.signup-wrap{max-width:980px;margin:0 auto}.stepbar{display:grid;gap:10px;margin-bottom:20px}.step{background:#fff;border:1px solid #e5e7eb;padding:12px;border-radius:14px;font-weight:900;text-align:center;color:#6b7280}.step.active{background:#2563eb;color:#fff}.step-page{display:none}.step-page.active{display:block}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.camera-box,.sign-box{border:2px dashed #cbd5e1;border-radius:18px;padding:20px;text-align:center;background:#f8fafc;margin-top:12px}video,canvas,img{max-width:100%;border-radius:14px;background:#111827}#signaturePad{width:100%;height:220px;background:white;border:1px solid #d1d5db;touch-action:none}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}.notice{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;padding:12px;border-radius:12px;margin:12px 0;font-size:14px}.done{text-align:center;padding:40px 20px}.done h2{font-size:34px;margin:0 0 12px;color:#16a34a}.usim-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.choice{border:1px solid #d1d5db;border-radius:18px;padding:20px;cursor:pointer;background:#fff}.choice.active{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.14)}@media(max-width:800px){.stepbar,.two,.usim-grid{grid-template-columns:1fr!important}}</style></head><body><header><div class="logo">네버랩텔레콤 신규가입</div><div class="user" id="userInfo">신청 진행</div></header><main><div class="signup-wrap"><h1 class="title">신규가입 신청서</h1><p class="sub">주민번호는 개인정보 보호를 위해 앞 7자리만 입력받아.</p><div class="stepbar" style="grid-template-columns:repeat(5,1fr)"><div class="step active" data-step-label="1">1. 신청서</div><div class="step" data-step-label="2">2. 신분증</div><div class="step" data-step-label="3">3. 서명</div><div class="step" data-step-label="4">4. USIM</div><div class="step" data-step-label="5">5. 완료</div></div>
-<section id="step1" class="panel step-page active"><h2>가입신청서</h2><div class="notice" id="precheckView"></div><div class="two"><div><label>제목</label><input id="formTitle" value="네버랩텔레콤 신규가입 신청서"></div><div><label>이름</label><input id="customerName"></div><div><label>주민번호 앞 7자리</label><input id="rrn7" maxlength="7" inputmode="numeric"></div><div><label>전화번호</label><input id="phone"></div><div><label>기존 통신사</label><select id="oldCarrier"><option value="">선택</option><option value="없음">없음 / 신규 번호</option><option>SKT</option><option>KT</option><option>LG U+</option><option>알뜰폰</option><option>기타</option></select></div><div><label>신청 요금제</label><input id="selectedPlan" disabled></div></div><div class="actions"><button class="btn gray" onclick="location.href='dashboard.html'">대시보드</button><button class="btn green" onclick="goStep2()">다음</button></div></section>
-<section id="step2" class="panel step-page"><h2>신분증 촬영 단계</h2><div class="camera-box"><video id="camera" autoplay playsinline width="640" height="360"></video><canvas id="photoCanvas" width="640" height="360" style="display:none"></canvas><div id="photoPreview"></div></div><div class="actions"><button class="btn gray" onclick="goStep(1)">이전</button><button class="btn" onclick="startCamera()">카메라 시작</button><button class="btn green" onclick="takePhoto()">촬영</button><button class="btn green" onclick="goStep3()">다음</button></div></section>
-<section id="step3" class="panel step-page"><h2>서명 단계</h2><div class="sign-box"><canvas id="signaturePad" width="900" height="220"></canvas></div><div class="actions"><button class="btn gray" onclick="goStep(2)">이전</button><button class="btn gray" onclick="clearSignature()">서명 지우기</button><button class="btn green" onclick="goStep4()">다음</button></div></section>
-<section id="step4" class="panel step-page"><h2>USIM 선택</h2><div class="usim-grid"><div class="choice" id="choiceUsim" onclick="selectUsim('USIM 개통')"><h2>USIM 개통</h2><p>실물 유심카드로 개통</p></div><div class="choice" id="choiceEsim" onclick="selectUsim('eSIM 개통')"><h2>eSIM 개통</h2><p>eSIM 프로파일로 개통</p></div></div><div class="actions"><button class="btn gray" onclick="goStep(3)">이전</button><button class="btn green" onclick="finishTelecomSignup()">신규가입 완료</button></div></section>
-<section id="step5" class="panel step-page"><div class="done"><h2>신규가입이 완료됐습니다</h2><p class="sub">고객과 전화번호가 자동으로 회선 등록됐어.</p><table id="completeSummary"></table><div class="actions" style="justify-content:center"><button class="btn" onclick="location.href='dashboard.html'">대시보드로 이동</button><button class="btn gray" onclick="location.href='telecomsignup.html'">새 신규가입</button></div></div></section></div></main><script>
-const TOKEN_KEY='neverlab_token', token=localStorage.getItem(TOKEN_KEY); if(!token) location.href='login.html'; const API='/.netlify/functions/api'; let precheck=JSON.parse(sessionStorage.getItem('neverlab_telecom_precheck')||'{}'), capturedPhoto='', signatureDone=false, stream=null, usimType='';
-async function api(path,options={}){const res=await fetch(API+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})}}); const data=await res.json(); if(!res.ok) throw new Error(data.message||'요청 실패'); return data;}
-function init(){selectedPlan.value=precheck.plan||'선택된 요금제 없음'; userInfo.textContent=`${precheck.branchName||'지점'} / ${precheck.employeeName||'직원'}`; precheckView.innerHTML=`<b>사전 확인</b><br>약정여부: ${precheck.contract||''} / 요금제: ${precheck.plan||''} / 복지할인여부: ${precheck.welfare||''} / 현역병여부: ${precheck.soldier||''}`; setupSignature();}
-function goStep(n){document.querySelectorAll('.step-page').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById('step'+n).classList.add('active');document.querySelector(`[data-step-label="${n}"]`).classList.add('active');}
-function goStep2(){const name=customerName.value.trim(), rrn=rrn7.value.replace(/\D/g,''), phone=phone.value.trim(), old=oldCarrier.value; rrn7.value=rrn; if(!name)return alert('이름을 입력해줘.'); if(rrn.length!==7)return alert('주민번호 앞 7자리를 입력해줘.'); if(!phone)return alert('전화번호를 입력해줘.'); if(!old)return alert('기존 통신사를 선택해줘.'); goStep(2);}
-async function startCamera(){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false}); camera.srcObject=stream;}catch{alert('카메라 권한을 확인해줘.')}}
-function takePhoto(){if(!camera.srcObject)return alert('먼저 카메라 시작을 눌러줘.'); photoCanvas.getContext('2d').drawImage(camera,0,0,photoCanvas.width,photoCanvas.height); capturedPhoto=photoCanvas.toDataURL('image/png'); photoPreview.innerHTML=`<p><b>촬영 완료</b></p><img src="${capturedPhoto}">`;}
-function goStep3(){if(!capturedPhoto)return alert('신분증 촬영을 먼저 해줘.'); if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;} goStep(3);}
-function setupSignature(){const c=signaturePad, ctx=c.getContext('2d'); let d=false; const pos=e=>{const r=c.getBoundingClientRect(), p=e.touches?e.touches[0]:e; return {x:(p.clientX-r.left)*(c.width/r.width),y:(p.clientY-r.top)*(c.height/r.height)}}; function st(e){d=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault();} function mv(e){if(!d)return; const p=pos(e); ctx.lineWidth=3; ctx.lineCap='round'; ctx.lineTo(p.x,p.y); ctx.stroke(); signatureDone=true; e.preventDefault();} function en(){d=false} c.addEventListener('mousedown',st);c.addEventListener('mousemove',mv);window.addEventListener('mouseup',en);c.addEventListener('touchstart',st);c.addEventListener('touchmove',mv);window.addEventListener('touchend',en);}
-function clearSignature(){signaturePad.getContext('2d').clearRect(0,0,signaturePad.width,signaturePad.height); signatureDone=false;} function goStep4(){if(!signatureDone)return alert('서명을 먼저 해줘.'); goStep(4);} function selectUsim(v){usimType=v; choiceUsim.classList.toggle('active',v==='USIM 개통'); choiceEsim.classList.toggle('active',v==='eSIM 개통');}
-async function finishTelecomSignup(){if(!usimType)return alert('USIM 또는 eSIM을 선택해줘.'); const s={title:formTitle.value.trim(),name:customerName.value.trim(),rrn7:rrn7.value,phone:phone.value.trim(),oldCarrier:oldCarrier.value,plan:precheck.plan||'',usimType,branchName:precheck.branchName||'',employeeName:precheck.employeeName||''}; try{await api('/line-complete',{method:'POST',body:JSON.stringify({type:'신규가입',...s})});}catch(e){alert(e.message);return;} completeSummary.innerHTML=`<tr><th>제목</th><td>${s.title}</td></tr><tr><th>이름</th><td>${s.name}</td></tr><tr><th>주민번호</th><td>${s.rrn7}******</td></tr><tr><th>전화번호</th><td>${s.phone}</td></tr><tr><th>기존 통신사</th><td>${s.oldCarrier}</td></tr><tr><th>요금제</th><td>${s.plan}</td></tr><tr><th>USIM/eSIM</th><td>${s.usimType}</td></tr><tr><th>처리 지점/직원</th><td>${s.branchName} / ${s.employeeName}</td></tr>`; goStep(5);}
-init();</script></body></html>
+
+    .signup-wrap { max-width: 980px; margin: 0 auto; }
+    .stepbar { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:20px; }
+    .step { background:#fff; border:1px solid #e5e7eb; padding:12px; border-radius:14px; font-weight:900; text-align:center; color:#6b7280; }
+    .step.active { background:#2563eb; color:#fff; border-color:#2563eb; }
+    .step-page { display:none; }
+    .step-page.active { display:block; }
+    .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .camera-box, .sign-box { border:2px dashed #cbd5e1; border-radius:18px; padding:20px; text-align:center; background:#f8fafc; margin-top:12px; }
+    video, canvas, img { max-width:100%; border-radius:14px; background:#111827; }
+    #signaturePad { width:100%; height:220px; background:white; border:1px solid #d1d5db; touch-action:none; }
+    .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap; }
+    .notice { background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; padding:12px; border-radius:12px; margin:12px 0; font-size:14px; }
+    .usim-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .choice { border:1px solid #d1d5db; border-radius:18px; padding:20px; cursor:pointer; background:#fff; }
+    .choice.active { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.14); }
+    .done { text-align:center; padding:40px 20px; }
+    .done h2 { font-size:34px; margin:0 0 12px; color:#16a34a; }
+    @media (max-width:800px) { .stepbar, .two, .usim-grid { grid-template-columns:1fr; } }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">네버랩텔레콤 신규가입</div>
+    <div class="user" id="userInfo">신청 진행</div>
+  </header>
+
+  <main>
+    <div class="signup-wrap">
+      <h1 class="title">신규가입 신청서</h1>
+      <p class="sub">개인정보 보호를 위해 주민번호는 앞 7자리까지만 입력받아.</p>
+
+      <div class="stepbar">
+        <div class="step active" data-step-label="1">1. 신청서</div>
+        <div class="step" data-step-label="2">2. 신분증</div>
+        <div class="step" data-step-label="3">3. 서명</div>
+        <div class="step" data-step-label="4">4. USIM/eSIM</div>
+        <div class="step" data-step-label="5">5. 완료</div>
+      </div>
+
+      <section id="step1" class="panel step-page active">
+        <h2>가입신청서</h2>
+        <div class="notice" id="precheckView">사전 확인 정보를 불러오는 중...</div>
+
+        <div class="two">
+          <div><label>제목</label><input id="telecomFormTitle" value="네버랩텔레콤 신규가입 신청서" /></div>
+          <div><label>이름</label><input id="telecomCustomerName" placeholder="예: 홍길동" /></div>
+          <div><label>주민번호 앞 7자리</label><input id="telecomRrn7" maxlength="7" inputmode="numeric" placeholder="예: 9901011" /></div>
+          <div><label>전화번호</label><input id="telecomSignupPhone" placeholder="010-1234-5678" /></div>
+          <div>
+            <label>기존 통신사</label>
+            <select id="telecomOldCarrier">
+              <option value="">선택해줘</option>
+              <option value="없음">없음 / 신규 번호</option>
+              <option value="SKT">SKT</option>
+              <option value="KT">KT</option>
+              <option value="LG U+">LG U+</option>
+              <option value="알뜰폰">알뜰폰</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div><label>신청 요금제</label><input id="selectedPlan" disabled /></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn gray" onclick="location.href='dashboard.html'">대시보드</button>
+          <button class="btn green" onclick="goToIdStep()">다음</button>
+        </div>
+      </section>
+
+      <section id="step2" class="panel step-page">
+        <h2>신분증 촬영 단계</h2>
+        <p class="sub">카메라 권한을 허용한 뒤 촬영해. 카메라가 안 되면 임시 촬영 처리 버튼을 써도 돼.</p>
+        <div class="camera-box">
+          <video id="camera" autoplay playsinline width="640" height="360"></video>
+          <canvas id="photoCanvas" width="640" height="360" style="display:none;"></canvas>
+          <div id="photoPreview"></div>
+        </div>
+        <div class="actions">
+          <button class="btn gray" onclick="goStep(1)">이전</button>
+          <button class="btn" onclick="startCamera()">카메라 시작</button>
+          <button class="btn green" onclick="takePhoto()">촬영</button>
+          <button class="btn gray" onclick="mockPhoto()">임시 촬영 처리</button>
+          <button class="btn green" onclick="goToSignStep()">다음</button>
+        </div>
+      </section>
+
+      <section id="step3" class="panel step-page">
+        <h2>서명 단계</h2>
+        <p class="sub">아래 서명란에 마우스나 터치로 서명해.</p>
+        <div class="sign-box"><canvas id="signaturePad" width="900" height="220"></canvas></div>
+        <div class="actions">
+          <button class="btn gray" onclick="goStep(2)">이전</button>
+          <button class="btn gray" onclick="clearSignature()">서명 지우기</button>
+          <button class="btn green" onclick="goToUsimStep()">다음</button>
+        </div>
+      </section>
+
+      <section id="step4" class="panel step-page">
+        <h2>USIM/eSIM 선택</h2>
+        <p class="sub">USIM 개통 또는 eSIM 개통 중 하나를 선택해.</p>
+        <div class="usim-grid">
+          <div class="choice" id="choiceUsim" onclick="selectUsim('USIM 개통')">
+            <h2>USIM 개통</h2>
+            <p>실물 유심카드로 개통</p>
+          </div>
+          <div class="choice" id="choiceEsim" onclick="selectUsim('eSIM 개통')">
+            <h2>eSIM 개통</h2>
+            <p>eSIM 프로파일로 개통</p>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn gray" onclick="goStep(3)">이전</button>
+          <button class="btn green" onclick="finishSignup()">완료</button>
+        </div>
+      </section>
+
+      <section id="step5" class="panel step-page">
+        <div class="done">
+          <h2>신규가입이 완료됐습니다</h2>
+          <p class="sub">고객과 전화번호가 자동으로 회선 등록됐어.</p>
+          <table id="completeSummary"></table>
+          <div class="actions" style="justify-content:center;">
+            <button class="btn" onclick="location.href='dashboard.html'">대시보드로 이동</button>
+            <button class="btn gray" onclick="location.href='telecomsignup.html'">새 신청</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const TOKEN_KEY = "neverlab_token";
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) location.href = "login.html";
+
+    const API = "/.netlify/functions/api";
+    const precheck = JSON.parse(sessionStorage.getItem("neverlab_telecom_precheck") || "{}");
+
+    let capturedPhoto = "";
+    let signatureDone = false;
+    let selectedUsimType = "";
+    let cameraStream = null;
+
+    function getValue(id) {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : "";
+    }
+
+    async function apiRequest(path, options = {}) {
+      const res = await fetch(API + path, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token,
+          ...(options.headers || {})
+        }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "요청 실패");
+      return data;
+    }
+
+    function init() {
+      document.getElementById("selectedPlan").value = precheck.plan || "선택된 요금제 없음";
+      document.getElementById("userInfo").textContent = `${precheck.branchName || "지점"} / ${precheck.employeeName || "직원"}`;
+      document.getElementById("precheckView").innerHTML = `
+        <b>사전 확인</b><br>
+        약정여부: ${precheck.contract || "없음"} /
+        요금제: ${precheck.plan || "없음"} /
+        복지할인여부: ${precheck.welfare || "없음"} /
+        현역병여부: ${precheck.soldier || "없음"}
+      `;
+      setupSignature();
+    }
+
+    function goStep(num) {
+      document.querySelectorAll(".step-page").forEach(s => s.classList.remove("active"));
+      document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+      document.getElementById("step" + num).classList.add("active");
+      document.querySelector(`[data-step-label="${num}"]`).classList.add("active");
+    }
+
+    function onlyDigits(value) {
+      return String(value || "").replace(/\D/g, "");
+    }
+
+    function goToIdStep() {
+      const inputName = getValue("telecomCustomerName");
+      const inputRrn7 = onlyDigits(getValue("telecomRrn7"));
+      const inputTel = getValue("telecomSignupPhone");
+      const inputOldCarrier = getValue("telecomOldCarrier");
+
+      document.getElementById("telecomRrn7").value = inputRrn7;
+
+      if (!inputName) return alert("이름을 입력해줘.");
+      if (inputRrn7.length !== 7) return alert("주민번호는 앞 7자리만 입력해줘.");
+      if (!inputTel) return alert("전화번호를 입력해줘.");
+      if (!inputOldCarrier) return alert("기존 통신사를 선택해줘.");
+
+      goStep(2);
+    }
+
+    async function startCamera() {
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        document.getElementById("camera").srcObject = cameraStream;
+      } catch (err) {
+        alert("카메라 권한을 확인해줘. 테스트 중이면 임시 촬영 처리를 눌러도 돼.");
+      }
+    }
+
+    function takePhoto() {
+      const video = document.getElementById("camera");
+      const canvas = document.getElementById("photoCanvas");
+      if (!video.srcObject) return alert("먼저 카메라 시작을 눌러줘.");
+      canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+      capturedPhoto = canvas.toDataURL("image/png");
+      document.getElementById("photoPreview").innerHTML = `<p><b>촬영 완료</b></p><img src="${capturedPhoto}" />`;
+    }
+
+    function mockPhoto() {
+      capturedPhoto = "mock-photo-ok";
+      document.getElementById("photoPreview").innerHTML = "<p><b>임시 촬영 처리 완료</b></p>";
+    }
+
+    function goToSignStep() {
+      if (!capturedPhoto) return alert("신분증 촬영을 먼저 해줘.");
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+      goStep(3);
+    }
+
+    function setupSignature() {
+      const canvas = document.getElementById("signaturePad");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      function pos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const point = e.touches ? e.touches[0] : e;
+        return {
+          x: (point.clientX - rect.left) * (canvas.width / rect.width),
+          y: (point.clientY - rect.top) * (canvas.height / rect.height)
+        };
+      }
+
+      function start(e) {
+        drawing = true;
+        const p = pos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        e.preventDefault();
+      }
+
+      function move(e) {
+        if (!drawing) return;
+        const p = pos(e);
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        signatureDone = true;
+        e.preventDefault();
+      }
+
+      function end() { drawing = false; }
+
+      canvas.addEventListener("mousedown", start);
+      canvas.addEventListener("mousemove", move);
+      window.addEventListener("mouseup", end);
+      canvas.addEventListener("touchstart", start);
+      canvas.addEventListener("touchmove", move);
+      window.addEventListener("touchend", end);
+    }
+
+    function clearSignature() {
+      const canvas = document.getElementById("signaturePad");
+      canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+      signatureDone = false;
+    }
+
+    function goToUsimStep() {
+      if (!signatureDone) return alert("서명을 먼저 해줘.");
+      goStep(4);
+    }
+
+    function selectUsim(value) {
+      selectedUsimType = value;
+      document.getElementById("choiceUsim").classList.toggle("active", value === "USIM 개통");
+      document.getElementById("choiceEsim").classList.toggle("active", value === "eSIM 개통");
+    }
+
+    async function finishSignup() {
+      if (!selectedUsimType) return alert("USIM 또는 eSIM을 선택해줘.");
+
+      const summary = {
+        title: getValue("telecomFormTitle"),
+        name: getValue("telecomCustomerName"),
+        rrn7: getValue("telecomRrn7"),
+        tel: getValue("telecomSignupPhone"),
+        oldCarrier: getValue("telecomOldCarrier"),
+        plan: precheck.plan || "",
+        contract: precheck.contract || "",
+        welfare: precheck.welfare || "",
+        soldier: precheck.soldier || "",
+        usimType: selectedUsimType,
+        branchName: precheck.branchName || "",
+        employeeName: precheck.employeeName || "",
+        completedAt: new Date().toISOString()
+      };
+
+      try {
+        await apiRequest("/line-complete", {
+          method: "POST",
+          body: JSON.stringify({
+            type: "신규가입",
+            name: summary.name,
+            phone: summary.tel,
+            rrn7: summary.rrn7,
+            oldCarrier: summary.oldCarrier,
+            plan: summary.plan,
+            usimType: summary.usimType
+          })
+        });
+      } catch (err) {
+        alert(err.message);
+        return;
+      }
+
+      document.getElementById("completeSummary").innerHTML = `
+        <tr><th>제목</th><td>${summary.title}</td></tr>
+        <tr><th>이름</th><td>${summary.name}</td></tr>
+        <tr><th>주민번호</th><td>${summary.rrn7}******</td></tr>
+        <tr><th>전화번호</th><td>${summary.tel}</td></tr>
+        <tr><th>기존 통신사</th><td>${summary.oldCarrier}</td></tr>
+        <tr><th>요금제</th><td>${summary.plan}</td></tr>
+        <tr><th>USIM/eSIM</th><td>${summary.usimType}</td></tr>
+        <tr><th>처리 지점/직원</th><td>${summary.branchName} / ${summary.employeeName}</td></tr>
+      `;
+
+      goStep(5);
+    }
+
+    init();
+  </script>
+</body>
+</html>
