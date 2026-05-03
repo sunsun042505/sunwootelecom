@@ -1321,7 +1321,10 @@ function emptyDB() {
     inventory: [],
     mobileTracking: [],
     notifications: [],
-    knowledgeBase: []
+    knowledgeBase: [],
+    workQueue: [],
+    callbacks: [],
+    auditLogs: []
   };
 }
 
@@ -1342,6 +1345,9 @@ async function readDB(store) {
   data.mobileTracking ||= [];
   data.notifications ||= [];
   data.knowledgeBase ||= [];
+  data.workQueue ||= [];
+  data.callbacks ||= [];
+  data.auditLogs ||= [];
   if (!data.catalogPlans.length) data.catalogPlans = DEFAULT_PLAN_CATALOG.map(x => ({ ...x }));
   if (!data.inventory.length) data.inventory = DEFAULT_INVENTORY.map(x => ({ ...x, id: crypto.randomUUID() }));
   if (!data.knowledgeBase.length) data.knowledgeBase = DEFAULT_KB.map(x => ({ ...x, id: crypto.randomUUID(), createdAt: now() }));
@@ -1504,7 +1510,7 @@ export async function handler(event) {
     if (method === "POST" && path === "/line-complete") return await lineComplete(event, data, store);
     if (method === "POST" && path === "/device-change-complete") return await deviceChangeComplete(event, data, store);
 
-    if (method === "GET" && path.startsWith("/customers/")) return await customerDetail(event, path, data);
+    if (method === "GET" && path.startsWith("/customers/")) return await customerDetail(event, path, data, store);
     if (method === "POST" && path.startsWith("/consultations")) return await createConsultation(event, data, store);
     if (method === "GET" && path === "/consultations") return await listConsultations(event, data);
 
@@ -1547,6 +1553,21 @@ export async function handler(event) {
     if (method === "PATCH" && path === "/customers/benefit") return await changeCustomerBenefit(event, data, store);
 
     if (method === "GET" && path === "/branch-performance") return await branchPerformance(event, data);
+
+    if (method === "GET" && path === "/customers-advanced") return await advancedCustomerSearch(event, data);
+    if (method === "PATCH" && path === "/line-status") return await updateLineStatus(event, data, store);
+    if (method === "POST" && path === "/penalty-calc") return await penaltyCalc(event, data);
+    if (method === "POST" && path === "/installments") return await setInstallment(event, data, store);
+
+    if (method === "GET" && path === "/work-queue") return await listWorkQueue(event, data);
+    if (method === "POST" && path === "/work-queue") return await createWorkQueue(event, data, store);
+    if (method === "PATCH" && path.startsWith("/work-queue/")) return await updateWorkQueue(event, path, data, store);
+
+    if (method === "GET" && path === "/callbacks") return await listCallbacks(event, data);
+    if (method === "POST" && path === "/callbacks") return await createCallback(event, data, store);
+    if (method === "PATCH" && path.startsWith("/callbacks/")) return await updateCallback(event, path, data, store);
+
+    if (method === "GET" && path === "/audit-logs") return await listAuditLogs(event, data);
 
     return json(404, { ok: false, message: "없는 API 주소야." });
   } catch (error) {
@@ -1958,7 +1979,7 @@ function requireManager(session) {
   }
 }
 
-async function customerDetail(event, path, data) {
+async function customerDetail(event, path, data, store) {
   const session = requireSession(data, event);
   const customerId = decodeURIComponent(path.split("/")[2]);
   const customer = data.customers.find(c => c.id === customerId);
@@ -1984,6 +2005,19 @@ async function customerDetail(event, path, data) {
     .filter(x => x.customerId === customer.id || x.phone === customer.phone)
     .slice()
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  data.auditLogs.push({
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    employeeName: session.employeeName,
+    action: "고객 상세 조회",
+    customerId: customer.id,
+    customerName: customer.name,
+    phone: customer.phone,
+    createdAt: now()
+  });
+  await writeDB(store, data);
 
   return json(200, {
     ok: true,
@@ -2560,4 +2594,274 @@ async function changeCustomerBenefit(event, data, store) {
   addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`고객 혜택 변경: ${customer.name} / ${customer.plan} / ${benefit}` });
   await writeDB(store, data);
   return json(200, { ok:true, customer });
+}
+
+
+function customerBranchName(data, customer) {
+  const branch = data.branches.find(b => b.id === customer.branchId);
+  return branch?.branchName || "";
+}
+
+async function advancedCustomerSearch(event, data) {
+  requireSession(data, event);
+  const q = event.queryStringParameters || {};
+  const keyword = String(q.keyword || "").trim().toLowerCase();
+  const status = String(q.status || "").trim();
+  const unpaid = String(q.unpaid || "").trim();
+  const plan = String(q.plan || "").trim().toLowerCase();
+  const branchName = String(q.branchName || "").trim().toLowerCase();
+
+  let customers = data.customers.slice();
+
+  if (keyword) {
+    customers = customers.filter(c =>
+      String(c.name || "").toLowerCase().includes(keyword) ||
+      String(c.phone || "").toLowerCase().includes(keyword) ||
+      String(c.plan || "").toLowerCase().includes(keyword) ||
+      String(c.device || "").toLowerCase().includes(keyword) ||
+      customerBranchName(data, c).toLowerCase().includes(keyword)
+    );
+  }
+  if (status) customers = customers.filter(c => c.status === status);
+  if (unpaid === "true") customers = customers.filter(c => c.unpaid === true);
+  if (unpaid === "false") customers = customers.filter(c => c.unpaid !== true);
+  if (plan) customers = customers.filter(c => String(c.plan || "").toLowerCase().includes(plan));
+  if (branchName) customers = customers.filter(c => customerBranchName(data, c).toLowerCase().includes(branchName));
+
+  return json(200, {
+    ok: true,
+    customers: customers
+      .sort((a,b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+      .map(c => ({
+        ...mapCustomer(c),
+        branchName: customerBranchName(data, c),
+        lineStatus: c.status || "active",
+        device: c.device || "",
+        selectedBenefit: c.selectedBenefit || "",
+        installment: c.installment || null
+      }))
+  });
+}
+
+async function updateLineStatus(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const phone = String(body.phone || "").trim();
+  const status = String(body.status || "").trim();
+  const reason = String(body.reason || "").trim();
+
+  const allowed = ["active", "temporary_stop", "lost_stop", "military_stop", "unpaid_stop", "closed"];
+  if (!allowed.includes(status)) return json(400, { ok:false, message:"회선 상태가 잘못됐어." });
+
+  const customer = data.customers.find(c => c.phone === phone);
+  if (!customer) return json(404, { ok:false, message:"고객을 찾을 수 없어." });
+
+  const oldStatus = customer.status;
+  customer.status = status;
+  customer.lineStopReason = reason;
+  customer.updatedAt = now();
+
+  data.workQueue.push({
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    employeeName: session.employeeName,
+    type: "회선상태 변경",
+    targetName: customer.name,
+    phone: customer.phone,
+    status: "처리완료",
+    reason: `${oldStatus} → ${status} / ${reason}`,
+    createdAt: now(),
+    updatedAt: now()
+  });
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `회선 상태 변경: ${customer.name} / ${phone} / ${oldStatus} → ${status}`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok:true, customer: mapCustomer(customer) });
+}
+
+async function penaltyCalc(event, data) {
+  requireSession(data, event);
+  const body = await readBody(event);
+  const contractMonths = Number(body.contractMonths || 24);
+  const usedMonths = Number(body.usedMonths || 0);
+  const monthlyDiscount = Number(body.monthlyDiscount || 25000);
+  const deviceSupport = Number(body.deviceSupport || 0);
+  const remainingMonths = Math.max(contractMonths - usedMonths, 0);
+
+  // 시뮬레이터용 단순 계산식: 남은 선택약정 할인 반환 예상 + 남은 공시지원금 비례분
+  const discountPenalty = remainingMonths * monthlyDiscount;
+  const devicePenalty = contractMonths ? Math.round(deviceSupport * (remainingMonths / contractMonths)) : 0;
+  const totalPenalty = discountPenalty + devicePenalty;
+
+  return json(200, {
+    ok: true,
+    result: {
+      contractMonths,
+      usedMonths,
+      remainingMonths,
+      monthlyDiscount,
+      deviceSupport,
+      discountPenalty,
+      devicePenalty,
+      totalPenalty
+    }
+  });
+}
+
+async function setInstallment(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const phone = String(body.phone || "").trim();
+  const deviceName = String(body.deviceName || "").trim();
+  const devicePrice = Number(body.devicePrice || 0);
+  const months = Number(body.months || 24);
+  const paidMonths = Number(body.paidMonths || 0);
+
+  const customer = data.customers.find(c => c.phone === phone);
+  if (!customer) return json(404, { ok:false, message:"고객을 찾을 수 없어." });
+  if (!devicePrice || !months) return json(400, { ok:false, message:"출고가와 할부개월을 입력해줘." });
+
+  const monthly = Math.round(devicePrice / months);
+  const remainingMonths = Math.max(months - paidMonths, 0);
+  const remainingAmount = monthly * remainingMonths;
+
+  customer.device = deviceName || customer.device || "단말기";
+  customer.installment = {
+    deviceName: customer.device,
+    devicePrice,
+    months,
+    paidMonths,
+    monthly,
+    remainingMonths,
+    remainingAmount,
+    updatedAt: now()
+  };
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `단말기 할부 등록/수정: ${customer.name} / ${customer.device} / 월 ${monthly}원`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok:true, customer });
+}
+
+async function listWorkQueue(event, data) {
+  requireSession(data, event);
+  return json(200, {
+    ok:true,
+    workQueue: data.workQueue
+      .slice()
+      .sort((a,b) => String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || "")))
+      .slice(0, 300)
+  });
+}
+
+async function createWorkQueue(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const item = {
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    employeeName: session.employeeName,
+    type: String(body.type || "일반작업"),
+    targetName: String(body.targetName || "").trim(),
+    phone: String(body.phone || "").trim(),
+    status: String(body.status || "접수"),
+    reason: String(body.reason || ""),
+    createdAt: now(),
+    updatedAt: now()
+  };
+  data.workQueue.push(item);
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`작업큐 등록: ${item.type} / ${item.targetName}` });
+  await writeDB(store, data);
+  return json(201, { ok:true, item });
+}
+
+async function updateWorkQueue(event, path, data, store) {
+  const session = requireSession(data, event);
+  const id = decodeURIComponent(path.split("/").pop());
+  const body = await readBody(event);
+  const item = data.workQueue.find(x => x.id === id);
+  if (!item) return json(404, { ok:false, message:"작업을 찾을 수 없어." });
+
+  item.status = String(body.status || item.status);
+  item.reason = String(body.reason || item.reason || "");
+  item.updatedAt = now();
+
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`작업 상태 변경: ${item.type} / ${item.status}` });
+  await writeDB(store, data);
+  return json(200, { ok:true, item });
+}
+
+async function listCallbacks(event, data) {
+  const session = requireSession(data, event);
+  const today = new Date().toISOString().slice(0,10);
+  return json(200, {
+    ok:true,
+    callbacks: data.callbacks
+      .filter(x => !x.branchId || x.branchId === session.branchId || true)
+      .sort((a,b) => String(a.callbackAt || "").localeCompare(String(b.callbackAt || ""))),
+    today
+  });
+}
+
+async function createCallback(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const item = {
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    employeeName: session.employeeName,
+    customerName: String(body.customerName || "").trim(),
+    phone: String(body.phone || "").trim(),
+    callbackAt: String(body.callbackAt || "").trim(),
+    memo: String(body.memo || "").trim(),
+    status: "예정",
+    createdAt: now(),
+    updatedAt: now()
+  };
+  if (!item.customerName || !item.phone || !item.callbackAt) return json(400, { ok:false, message:"이름, 전화번호, 콜백 시간을 입력해줘." });
+  data.callbacks.push(item);
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`콜백 예약: ${item.customerName} / ${item.callbackAt}` });
+  await writeDB(store, data);
+  return json(201, { ok:true, item });
+}
+
+async function updateCallback(event, path, data, store) {
+  const session = requireSession(data, event);
+  const id = decodeURIComponent(path.split("/").pop());
+  const body = await readBody(event);
+  const item = data.callbacks.find(x => x.id === id);
+  if (!item) return json(404, { ok:false, message:"콜백을 찾을 수 없어." });
+  item.status = String(body.status || item.status);
+  item.updatedAt = now();
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`콜백 상태 변경: ${item.customerName} / ${item.status}` });
+  await writeDB(store, data);
+  return json(200, { ok:true, item });
+}
+
+async function listAuditLogs(event, data) {
+  const session = requireSession(data, event);
+  requireManager(session);
+  return json(200, {
+    ok:true,
+    auditLogs: data.auditLogs
+      .slice()
+      .sort((a,b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+      .slice(0, 500)
+  });
 }

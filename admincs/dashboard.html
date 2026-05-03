@@ -187,6 +187,13 @@ th { background:#f9fafb; color:#6b7280; }
         <button class="active" data-section="home">대시보드</button>
         <button data-section="customers">고객 조회</button>
         <button data-section="customerDetail">고객 상세/상담</button>
+        <button data-section="advancedSearch">통합검색</button>
+        <button data-section="lineControl">회선상태</button>
+        <button data-section="penaltyInstallment">위약금/할부</button>
+        <button data-section="workQueue">작업큐</button>
+        <button data-section="callbacks">콜백/할일</button>
+        <button data-section="csvExport">CSV 내보내기</button>
+        <button data-section="auditLogs">감사 로그</button>
         <button data-section="tickets">장애/민원</button>
         <button data-section="applications">신청 관리</button>
         <button data-section="advancedBilling">청구/수납</button>
@@ -959,6 +966,156 @@ th { background:#f9fafb; color:#6b7280; }
         </div>
       </section>
 
+
+      <section id="advancedSearch" class="section">
+        <div class="panel">
+          <h2>고객 통합 검색 고도화</h2>
+          <p class="sub">이름, 전화번호, 요금제, 단말기, 가입지점, 미납 여부로 전 지점 고객을 검색해.</p>
+          <div class="row">
+            <div><label>키워드</label><input id="advKeyword" placeholder="이름/전화번호/요금제/단말기/지점" /></div>
+            <div>
+              <label>회선 상태</label>
+              <select id="advStatus">
+                <option value="">전체</option>
+                <option value="active">정상</option>
+                <option value="temporary_stop">일시정지</option>
+                <option value="lost_stop">분실정지</option>
+                <option value="military_stop">군정지</option>
+                <option value="unpaid_stop">미납정지</option>
+                <option value="closed">해지</option>
+              </select>
+            </div>
+            <div>
+              <label>미납 여부</label>
+              <select id="advUnpaid">
+                <option value="">전체</option>
+                <option value="true">미납</option>
+                <option value="false">정상</option>
+              </select>
+            </div>
+            <button class="btn green" onclick="advancedSearch()">검색</button>
+          </div>
+          <div id="advancedSearchTable" style="margin-top:16px;"></div>
+        </div>
+      </section>
+
+      <section id="lineControl" class="section">
+        <div class="panel">
+          <h2>회선 일시정지 / 정지해제</h2>
+          <div class="row">
+            <div><label>전화번호</label><input id="linePhone" placeholder="010-1234-5678" /></div>
+            <div>
+              <label>회선 상태</label>
+              <select id="lineStatus">
+                <option value="active">정상/정지해제</option>
+                <option value="temporary_stop">일시정지</option>
+                <option value="lost_stop">분실정지</option>
+                <option value="military_stop">군정지</option>
+                <option value="unpaid_stop">미납정지</option>
+                <option value="closed">해지</option>
+              </select>
+            </div>
+            <div><label>사유</label><input id="lineReason" placeholder="분실/해외체류/미납 등" /></div>
+            <button class="btn green" onclick="updateLineStatus()">상태 변경</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="penaltyInstallment" class="section">
+        <div class="panel">
+          <h2>약정 / 위약금 계산기</h2>
+          <div class="row">
+            <div><label>약정 개월</label><input id="contractMonths" type="number" value="24" /></div>
+            <div><label>사용 개월</label><input id="usedMonths" type="number" value="6" /></div>
+            <div><label>월 할인액</label><input id="monthlyDiscount" type="number" value="25000" /></div>
+            <button class="btn green" onclick="calcPenalty()">계산</button>
+          </div>
+          <label>공시지원금/단말지원금</label>
+          <input id="deviceSupport" type="number" value="0" />
+          <div id="penaltyResult" style="margin-top:16px;"></div>
+        </div>
+
+        <div class="panel">
+          <h2>단말기 할부금 관리</h2>
+          <div class="row">
+            <div><label>전화번호</label><input id="installPhone" /></div>
+            <div><label>단말기명</label><input id="installDevice" placeholder="예: iPhone 17 Pro" /></div>
+            <div><label>출고가</label><input id="installPrice" type="number" value="1500000" /></div>
+            <button class="btn green" onclick="setInstallment()">할부 저장</button>
+          </div>
+          <div class="row" style="margin-top:12px; grid-template-columns: 1fr 1fr 1fr auto;">
+            <div><label>할부개월</label><input id="installMonths" type="number" value="24" /></div>
+            <div><label>납부개월</label><input id="paidMonths" type="number" value="0" /></div>
+            <div><label>메모</label><input disabled value="고객 상세에서 할부금 확인 가능" /></div>
+            <button class="btn gray" onclick="document.getElementById('installPhone').value=''">초기화</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="workQueue" class="section">
+        <div class="panel">
+          <h2>작업 큐 + 반려/보류 사유</h2>
+          <div class="row">
+            <div>
+              <label>작업 유형</label>
+              <select id="workType">
+                <option>가입심사</option><option>번호이동</option><option>기기변경</option><option>USIM재발급</option><option>요금제변경</option><option>일반작업</option>
+              </select>
+            </div>
+            <div><label>고객명</label><input id="workName" /></div>
+            <div><label>전화번호</label><input id="workPhone" /></div>
+            <button class="btn green" onclick="createWork()">작업 등록</button>
+          </div>
+          <label>보류/반려 사유</label>
+          <select id="workReason">
+            <option>없음</option>
+            <option>신분증 불명확</option>
+            <option>명의자 불일치</option>
+            <option>기존 통신사 정보 불일치</option>
+            <option>미납 확인 필요</option>
+            <option>약정 위약금 확인 필요</option>
+            <option>서명 누락</option>
+          </select>
+        </div>
+        <div class="panel"><h2>작업 목록</h2><div id="workQueueTable"></div></div>
+      </section>
+
+      <section id="callbacks" class="section">
+        <div class="panel">
+          <h2>콜백 예약 / 오늘의 할 일</h2>
+          <div class="row">
+            <div><label>고객명</label><input id="callbackName" /></div>
+            <div><label>전화번호</label><input id="callbackPhone" /></div>
+            <div><label>콜백 시간</label><input id="callbackAt" type="datetime-local" /></div>
+            <button class="btn green" onclick="createCallback()">예약</button>
+          </div>
+          <label>메모</label><input id="callbackMemo" placeholder="다시 안내할 내용" />
+        </div>
+        <div class="panel"><h2>콜백/할 일 목록</h2><div id="callbackTable"></div></div>
+      </section>
+
+      <section id="csvExport" class="section">
+        <div class="panel">
+          <h2>CSV 내보내기</h2>
+          <p class="sub">브라우저에서 현재 데이터를 CSV로 내려받아. 고객/청구/티켓/신청/상담 내보내기를 지원해.</p>
+          <div class="actions" style="justify-content:flex-start;">
+            <button class="btn" onclick="exportCsv('customers')">고객 CSV</button>
+            <button class="btn" onclick="exportCsv('billing')">청구 CSV</button>
+            <button class="btn" onclick="exportCsv('tickets')">티켓 CSV</button>
+            <button class="btn" onclick="exportCsv('applications')">신청 CSV</button>
+            <button class="btn" onclick="exportCsv('consultations')">상담 CSV</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="auditLogs" class="section">
+        <div class="panel">
+          <h2>개인정보 조회 감사 로그</h2>
+          <p class="sub">매니저만 볼 수 있어. 고객 상세 조회 시 누가 언제 어떤 고객을 조회했는지 남아.</p>
+          <div id="auditTable"></div>
+        </div>
+      </section>
+
       <section id="logs" class="section">
         <div class="panel">
           <h2>전체 로그</h2>
@@ -1596,6 +1753,9 @@ th { background:#f9fafb; color:#6b7280; }
       if (active === "mobileTracking") await loadMobileTracking();
       if (active === "notifications") await loadNotifications();
       if (active === "knowledge") await loadKnowledge();
+      if (active === "workQueue") await loadWorkQueue();
+      if (active === "callbacks") await loadCallbacks();
+      if (active === "auditLogs") await loadAuditLogs();
     }
 
 
@@ -1792,6 +1952,161 @@ th { background:#f9fafb; color:#6b7280; }
         alert("혜택 변경 완료");
         await refreshAll();
       } catch (err) { alert(err.message); }
+    }
+
+
+    async function advancedSearch() {
+      const params = new URLSearchParams({
+        keyword: document.getElementById("advKeyword").value.trim(),
+        status: document.getElementById("advStatus").value,
+        unpaid: document.getElementById("advUnpaid").value
+      });
+      const data = await api("/customers-advanced?" + params.toString());
+      const el = document.getElementById("advancedSearchTable");
+      if (!data.customers.length) { el.innerHTML = '<div class="empty">검색 결과가 없어.</div>'; return; }
+      el.innerHTML = `
+        <table><thead><tr><th>이름</th><th>전화번호</th><th>가입지점</th><th>요금제</th><th>상태</th><th>미납</th><th>기기</th><th>혜택</th></tr></thead>
+        <tbody>${data.customers.map(c => `<tr><td>${c.name}</td><td>${c.phone}</td><td>${c.branchName || "-"}</td><td>${c.plan}</td><td>${c.status}</td><td>${c.unpaid ? "미납" : "정상"}</td><td>${c.device || "-"}</td><td>${c.selectedBenefit || "-"}</td></tr>`).join("")}</tbody></table>`;
+    }
+
+    async function updateLineStatus() {
+      try {
+        await api("/line-status", { method:"PATCH", body: JSON.stringify({
+          phone: document.getElementById("linePhone").value.trim(),
+          status: document.getElementById("lineStatus").value,
+          reason: document.getElementById("lineReason").value.trim()
+        })});
+        alert("회선 상태 변경 완료");
+        await refreshAll();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function calcPenalty() {
+      try {
+        const data = await api("/penalty-calc", { method:"POST", body: JSON.stringify({
+          contractMonths: Number(document.getElementById("contractMonths").value),
+          usedMonths: Number(document.getElementById("usedMonths").value),
+          monthlyDiscount: Number(document.getElementById("monthlyDiscount").value),
+          deviceSupport: Number(document.getElementById("deviceSupport").value)
+        })});
+        const r = data.result;
+        document.getElementById("penaltyResult").innerHTML = `
+          <table>
+            <tr><th>남은 개월</th><td>${r.remainingMonths}개월</td></tr>
+            <tr><th>선택약정 예상 반환금</th><td>${money(r.discountPenalty)}</td></tr>
+            <tr><th>공시지원금 예상 반환금</th><td>${money(r.devicePenalty)}</td></tr>
+            <tr><th>총 예상 위약금</th><td><b>${money(r.totalPenalty)}</b></td></tr>
+          </table>`;
+      } catch (err) { alert(err.message); }
+    }
+
+    async function setInstallment() {
+      try {
+        const data = await api("/installments", { method:"POST", body: JSON.stringify({
+          phone: document.getElementById("installPhone").value.trim(),
+          deviceName: document.getElementById("installDevice").value.trim(),
+          devicePrice: Number(document.getElementById("installPrice").value),
+          months: Number(document.getElementById("installMonths").value),
+          paidMonths: Number(document.getElementById("paidMonths").value)
+        })});
+        alert("할부 저장 완료. 월 할부금: " + money(data.customer.installment.monthly));
+      } catch (err) { alert(err.message); }
+    }
+
+    async function createWork() {
+      try {
+        await api("/work-queue", { method:"POST", body: JSON.stringify({
+          type: document.getElementById("workType").value,
+          targetName: document.getElementById("workName").value.trim(),
+          phone: document.getElementById("workPhone").value.trim(),
+          reason: document.getElementById("workReason").value
+        })});
+        await loadWorkQueue();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadWorkQueue() {
+      const data = await api("/work-queue");
+      const el = document.getElementById("workQueueTable");
+      if (!el) return;
+      const states = ["접수","검토중","보류","승인","처리완료","반려"];
+      if (!data.workQueue.length) { el.innerHTML = '<div class="empty">작업이 없어.</div>'; return; }
+      el.innerHTML = `
+        <table><thead><tr><th>시간</th><th>유형</th><th>고객</th><th>전화번호</th><th>상태</th><th>사유</th><th>변경</th></tr></thead>
+        <tbody>${data.workQueue.map(w => `<tr><td>${safeDate(w.createdAt)}</td><td>${w.type}</td><td>${w.targetName}</td><td>${w.phone}</td><td>${w.status}</td><td>${w.reason || ""}</td><td><select onchange="updateWork('${w.id}', this.value)">${states.map(s => `<option ${s===w.status?"selected":""}>${s}</option>`).join("")}</select></td></tr>`).join("")}</tbody></table>`;
+    }
+
+    async function updateWork(id, status) {
+      await api("/work-queue/" + encodeURIComponent(id), { method:"PATCH", body: JSON.stringify({ status }) });
+      await loadWorkQueue();
+    }
+
+    async function createCallback() {
+      try {
+        await api("/callbacks", { method:"POST", body: JSON.stringify({
+          customerName: document.getElementById("callbackName").value.trim(),
+          phone: document.getElementById("callbackPhone").value.trim(),
+          callbackAt: document.getElementById("callbackAt").value,
+          memo: document.getElementById("callbackMemo").value.trim()
+        })});
+        await loadCallbacks();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadCallbacks() {
+      const data = await api("/callbacks");
+      const el = document.getElementById("callbackTable");
+      if (!el) return;
+      if (!data.callbacks.length) { el.innerHTML = '<div class="empty">콜백이 없어.</div>'; return; }
+      el.innerHTML = `
+        <table><thead><tr><th>콜백 시간</th><th>고객</th><th>전화번호</th><th>메모</th><th>상태</th><th>처리</th></tr></thead>
+        <tbody>${data.callbacks.map(c => `<tr><td>${safeDate(c.callbackAt)}</td><td>${c.customerName}</td><td>${c.phone}</td><td>${c.memo}</td><td>${c.status}</td><td><button class="btn green" onclick="finishCallback('${c.id}')">완료</button></td></tr>`).join("")}</tbody></table>`;
+    }
+
+    async function finishCallback(id) {
+      await api("/callbacks/" + encodeURIComponent(id), { method:"PATCH", body: JSON.stringify({ status:"완료" }) });
+      await loadCallbacks();
+    }
+
+    function toCsv(rows) {
+      if (!rows || !rows.length) return "";
+      const keys = Array.from(rows.reduce((set, row) => { Object.keys(row).forEach(k => set.add(k)); return set; }, new Set()));
+      const esc = v => `"${String(v ?? "").replaceAll('"','""')}"`;
+      return [keys.join(","), ...rows.map(r => keys.map(k => esc(typeof r[k] === "object" ? JSON.stringify(r[k]) : r[k])).join(","))].join("\n");
+    }
+
+    function downloadCsv(filename, csv) {
+      const blob = new Blob(["\uFEFF" + csv], { type:"text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function exportCsv(type) {
+      let rows = [];
+      if (type === "customers") rows = (await api("/customers-advanced")).customers;
+      if (type === "billing") rows = (await api("/billing")).bills;
+      if (type === "tickets") rows = (await api("/tickets")).tickets;
+      if (type === "applications") rows = (await api("/applications")).applications;
+      if (type === "consultations") rows = (await api("/consultations")).consultations;
+      downloadCsv(`neverlab_${type}_${new Date().toISOString().slice(0,10)}.csv`, toCsv(rows));
+    }
+
+    async function loadAuditLogs() {
+      const el = document.getElementById("auditTable");
+      if (!el) return;
+      try {
+        const data = await api("/audit-logs");
+        if (!data.auditLogs.length) { el.innerHTML = '<div class="empty">감사 로그가 없어.</div>'; return; }
+        el.innerHTML = `
+          <table><thead><tr><th>시간</th><th>직원</th><th>행동</th><th>고객</th><th>전화번호</th></tr></thead>
+          <tbody>${data.auditLogs.map(a => `<tr><td>${safeDate(a.createdAt)}</td><td>${a.employeeName}</td><td>${a.action}</td><td>${a.customerName}</td><td>${a.phone}</td></tr>`).join("")}</tbody></table>`;
+      } catch (err) {
+        el.innerHTML = `<div class="empty">${err.message}</div>`;
+      }
     }
 
     document.getElementById("logoutBtn").addEventListener("click", async () => {
