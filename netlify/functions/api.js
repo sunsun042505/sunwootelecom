@@ -107,6 +107,1183 @@ const planPrices = {
   "네버랩 현역병 안심 55": 55000
 };
 
+const DEFAULT_PLAN_CATALOG = [
+  {
+    "name": "SKT 5GX 프리미엄",
+    "price": 109000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 5GX 프라임플러스",
+    "price": 99000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 5GX 프라임",
+    "price": 89000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 5GX 레귤러플러스",
+    "price": 79000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 5GX 레귤러",
+    "price": 69000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 5G 베이직플러스",
+    "price": 59000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 5G 베이직",
+    "price": 49000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 다이렉트5G 76",
+    "price": 76000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 다이렉트5G 69",
+    "price": 69000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 다이렉트5G 62",
+    "price": 62000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 다이렉트5G 55",
+    "price": 55000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 다이렉트5G 48",
+    "price": 48000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 0청년 109",
+    "price": 109000,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 0청년 99",
+    "price": 99000,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 0청년 79",
+    "price": 79000,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 0청년 69",
+    "price": 69000,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 0청년 59",
+    "price": 59000,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 0틴 5G",
+    "price": 45000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 5G ZEM 퍼펙트",
+    "price": 36000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 주말엔 팅 3GB",
+    "price": 41000,
+    "category": "기타",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT LTE 데이터ON 프리미엄",
+    "price": 89000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능",
+      "T 우주/미디어 제휴 혜택 대상",
+      "멤버십/청년 제휴 혜택",
+      "OTT/뮤직 선택 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT LTE 데이터ON 스탠다드",
+    "price": 69000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT LTE 세이브",
+    "price": 33000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 시니어 안심 4GB",
+    "price": 22000,
+    "category": "기타",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "SKT 복지 5G 라이트",
+    "price": 33000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 스페셜",
+    "price": 100000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 베이직",
+    "price": 80000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 심플 110GB",
+    "price": 69000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 심플 70GB",
+    "price": 65000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 심플 50GB",
+    "price": 63000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 심플 30GB",
+    "price": 61000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 슬림 21GB",
+    "price": 55000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 슬림 14GB",
+    "price": 47000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 슬림 10GB",
+    "price": 45000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 슬림 4GB",
+    "price": 37000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 슬림 이월 21GB",
+    "price": 56000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 5G 슬림 이월 14GB",
+    "price": 48000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT LTE 데이터ON 프리미엄",
+    "price": 89000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT LTE 데이터ON 비디오",
+    "price": 69000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT LTE 데이터ON 톡",
+    "price": 49000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT LTE 베이직",
+    "price": 33000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT LTE Y 무제한",
+    "price": 69000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT LTE Y 10GB",
+    "price": 49000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT LTE Y 2.5GB",
+    "price": 33000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 시니어 베이직",
+    "price": 22000,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "티빙/지니/밀리/디즈니+ 계열 선택 혜택",
+      "OTT 계정 등록 필요",
+      "멤버십/제휴 할인 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 시니어 데이터안심",
+    "price": 33000,
+    "category": "기타",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 복지 데이터안심",
+    "price": 33000,
+    "category": "기타",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 키즈 알 115",
+    "price": 28000,
+    "category": "기타",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 군인 Y군인 77",
+    "price": 77000,
+    "category": "기타",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "KT 군인 Y군인 55",
+    "price": 55000,
+    "category": "기타",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 시그니처",
+    "price": 130000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "OTT/VOD 할인팩 대상",
+      "유튜브 프리미엄/디즈니+/티빙 할인 계열",
+      "U+ 콘텐츠 제휴 혜택"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 프리미어 슈퍼",
+    "price": 115000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "OTT/VOD 할인팩 대상",
+      "유튜브 프리미엄/디즈니+/티빙 할인 계열",
+      "U+ 콘텐츠 제휴 혜택"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 프리미어 플러스",
+    "price": 105000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "OTT/VOD 할인팩 대상",
+      "유튜브 프리미엄/디즈니+/티빙 할인 계열",
+      "U+ 콘텐츠 제휴 혜택"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 프리미어 레귤러",
+    "price": 95000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "OTT/VOD 할인팩 대상",
+      "유튜브 프리미엄/디즈니+/티빙 할인 계열",
+      "U+ 콘텐츠 제휴 혜택"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 프리미어 에센셜",
+    "price": 85000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "OTT/VOD 할인팩 대상",
+      "유튜브 프리미엄/디즈니+/티빙 할인 계열",
+      "U+ 콘텐츠 제휴 혜택"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 스탠다드",
+    "price": 75000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "OTT/VOD 할인팩 대상",
+      "유튜브 프리미엄/디즈니+/티빙 할인 계열",
+      "U+ 콘텐츠 제휴 혜택"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 데이터 슈퍼",
+    "price": 68000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 데이터 플러스",
+    "price": 61000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 라이트+",
+    "price": 55000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 5G 라이트",
+    "price": 47000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 다이렉트 5G 69",
+    "price": 69000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 다이렉트 5G 59",
+    "price": 59000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 다이렉트 5G 51",
+    "price": 51000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 다이렉트 5G 44",
+    "price": 44000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ LTE 프리미어 플러스",
+    "price": 89000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "OTT/VOD 할인팩 대상",
+      "유튜브 프리미엄/디즈니+/티빙 할인 계열",
+      "U+ 콘텐츠 제휴 혜택"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ LTE 추가요금 걱정없는 데이터 69",
+    "price": 69000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ LTE 추가요금 걱정없는 데이터 59",
+    "price": 59000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ LTE 데이터 33",
+    "price": 33000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 청소년 5G 라이트",
+    "price": 45000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 키즈 5G",
+    "price": 29000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 시니어 5G 안심",
+    "price": 45000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 시니어 LTE 안심",
+    "price": 33000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 복지 LTE 라이트",
+    "price": 22000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 현역병 5G 55",
+    "price": 55000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "U+ 태블릿 5G 4GB",
+    "price": 22000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 1GB 100분",
+    "price": 3900,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 3GB 200분",
+    "price": 5900,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 6GB 350분",
+    "price": 9900,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 7GB+1Mbps",
+    "price": 19800,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 10GB+1Mbps",
+    "price": 22000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 11GB+2GB+3Mbps",
+    "price": 33000,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "대용량 데이터 혜택",
+      "제휴/프로모션형 OTT 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 15GB 350분",
+    "price": 22000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 15GB+3Mbps",
+    "price": 27500,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 LTE 100GB+5Mbps",
+    "price": 39900,
+    "category": "LTE",
+    "active": true,
+    "benefits": [
+      "대용량 데이터 혜택",
+      "제휴/프로모션형 OTT 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 5G 9GB",
+    "price": 19000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 5G 30GB",
+    "price": 27500,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 5G 50GB",
+    "price": 33000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "기본 혜택 없음",
+      "저가 실속형"
+    ],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 5G 100GB",
+    "price": 44000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "대용량 데이터 혜택",
+      "제휴/프로모션형 OTT 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "알뜰 5G 무제한",
+    "price": 55000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "대용량 데이터 혜택",
+      "제휴/프로모션형 OTT 혜택 가능"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 5G 스타터",
+    "price": 29000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 5G 라이트",
+    "price": 39000,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 5G 베이직",
+    "price": 49000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "네버랩 미디어 라이트",
+      "VOD 쿠폰 월 1회",
+      "뮤직 할인"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 5G 스탠다드",
+    "price": 59000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "네버랩 미디어 라이트",
+      "VOD 쿠폰 월 1회",
+      "뮤직 할인"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 5G 프리미엄",
+    "price": 79000,
+    "category": "5G",
+    "active": true,
+    "benefits": [
+      "네버랩 미디어팩",
+      "OTT 1종 선택",
+      "뮤직 스트리밍 할인",
+      "클라우드 100GB"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 LTE 절약 1GB",
+    "price": 9900,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 LTE 실속 5GB",
+    "price": 19900,
+    "category": "5G",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 LTE 안심 10GB",
+    "price": 29900,
+    "category": "LTE",
+    "active": true,
+    "benefits": [],
+    "hasBenefits": false,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 시니어 안심콜",
+    "price": 14900,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "시니어 안심콜",
+      "스팸차단",
+      "위치안심 부가서비스"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 복지할인 라이트",
+    "price": 19900,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "복지할인 대상",
+      "기본료 할인",
+      "상담 우선 연결"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  },
+  {
+    "name": "네버랩 현역병 안심 55",
+    "price": 55000,
+    "category": "기타",
+    "active": true,
+    "benefits": [
+      "현역병 전용",
+      "휴가 데이터 쿠폰",
+      "영상통화 할인"
+    ],
+    "hasBenefits": true,
+    "sourceNote": "CS 시뮬레이터용 혜택 매핑"
+  }
+];
+const DEFAULT_INVENTORY = [
+  {
+    "type": "USIM",
+    "name": "일반 USIM",
+    "model": "NEVER-USIM-01",
+    "stock": 120,
+    "status": "사용가능"
+  },
+  {
+    "type": "eSIM",
+    "name": "eSIM 프로파일",
+    "model": "NEVER-ESIM",
+    "stock": 300,
+    "status": "사용가능"
+  },
+  {
+    "type": "단말기",
+    "name": "iPhone 17 Pro Max",
+    "model": "A-17PM-256",
+    "stock": 5,
+    "status": "사용가능"
+  },
+  {
+    "type": "단말기",
+    "name": "iPhone 17 Pro",
+    "model": "A-17P-256",
+    "stock": 6,
+    "status": "사용가능"
+  },
+  {
+    "type": "단말기",
+    "name": "iPhone Air",
+    "model": "A-AIR-256",
+    "stock": 4,
+    "status": "사용가능"
+  },
+  {
+    "type": "단말기",
+    "name": "Samsung Galaxy S26 Ultra",
+    "model": "S26U-256",
+    "stock": 8,
+    "status": "사용가능"
+  },
+  {
+    "type": "단말기",
+    "name": "Samsung Galaxy S26",
+    "model": "S26-256",
+    "stock": 10,
+    "status": "사용가능"
+  },
+  {
+    "type": "단말기",
+    "name": "Samsung Galaxy Z Fold7",
+    "model": "ZF7-512",
+    "stock": 3,
+    "status": "사용가능"
+  },
+  {
+    "type": "단말기",
+    "name": "Samsung Galaxy Z Flip7",
+    "model": "ZFLIP7-256",
+    "stock": 7,
+    "status": "사용가능"
+  },
+  {
+    "type": "단말기",
+    "name": "Google Pixel 10 Pro",
+    "model": "P10P-256",
+    "stock": 4,
+    "status": "사용가능"
+  }
+];
+const DEFAULT_KB = [
+  {
+    "category": "요금",
+    "title": "미납 안내 스크립트",
+    "content": "고객님, 현재 미납 요금이 확인됩니다. 납부 처리 후 서비스 이용 제한이 해제될 수 있습니다."
+  },
+  {
+    "category": "번호이동",
+    "title": "번호이동 사전동의 안내",
+    "content": "기존 통신사 인증 또는 사전동의가 필요합니다. 명의자 정보와 기존 통신사 정보를 확인해 주세요."
+  },
+  {
+    "category": "신분증",
+    "title": "신분증 재촬영 요청",
+    "content": "신분증 사진이 흐리거나 빛 반사가 있으면 반려될 수 있습니다. 전체 영역이 선명하게 나오도록 재촬영해 주세요."
+  },
+  {
+    "category": "USIM",
+    "title": "USIM 인식 불가 조치",
+    "content": "전원 재부팅, USIM 재장착, 단말 네트워크 초기화를 안내하고 계속 안 되면 재발급 접수하세요."
+  },
+  {
+    "category": "eSIM",
+    "title": "eSIM 재발급 안내",
+    "content": "기기 변경 또는 초기화 후 eSIM 재발급이 필요할 수 있습니다. QR 또는 프로파일 발급 상태를 확인하세요."
+  }
+];
+
+
 function json(statusCode, data) {
   return {
     statusCode,
@@ -139,7 +1316,12 @@ function emptyDB() {
     tickets: [],
     applications: [],
     bills: [],
-    serviceOrders: []
+    serviceOrders: [],
+    catalogPlans: [],
+    inventory: [],
+    mobileTracking: [],
+    notifications: [],
+    knowledgeBase: []
   };
 }
 
@@ -155,6 +1337,14 @@ async function readDB(store) {
   data.applications ||= [];
   data.bills ||= [];
   data.serviceOrders ||= [];
+  data.catalogPlans ||= [];
+  data.inventory ||= [];
+  data.mobileTracking ||= [];
+  data.notifications ||= [];
+  data.knowledgeBase ||= [];
+  if (!data.catalogPlans.length) data.catalogPlans = DEFAULT_PLAN_CATALOG.map(x => ({ ...x }));
+  if (!data.inventory.length) data.inventory = DEFAULT_INVENTORY.map(x => ({ ...x, id: crypto.randomUUID() }));
+  if (!data.knowledgeBase.length) data.knowledgeBase = DEFAULT_KB.map(x => ({ ...x, id: crypto.randomUUID(), createdAt: now() }));
   return data;
 }
 
@@ -335,6 +1525,26 @@ export async function handler(event) {
 
     if (method === "GET" && path === "/employees") return await listEmployees(event, data);
     if (method === "PATCH" && path.startsWith("/employees/")) return await updateEmployeeRole(event, path, data, store);
+
+    if (method === "GET" && path === "/catalog/plans") return await listCatalogPlans(event, data);
+    if (method === "POST" && path === "/catalog/plans") return await upsertCatalogPlan(event, data, store);
+    if (method === "PATCH" && path.startsWith("/catalog/plans/")) return await toggleCatalogPlan(event, path, data, store);
+
+    if (method === "GET" && path === "/inventory") return await listInventory(event, data);
+    if (method === "POST" && path === "/inventory") return await addInventory(event, data, store);
+    if (method === "PATCH" && path.startsWith("/inventory/")) return await updateInventory(event, path, data, store);
+
+    if (method === "GET" && path === "/mobile-tracking") return await listMobileTracking(event, data);
+    if (method === "POST" && path === "/mobile-tracking") return await createMobileTracking(event, data, store);
+    if (method === "PATCH" && path.startsWith("/mobile-tracking/")) return await updateMobileTracking(event, path, data, store);
+
+    if (method === "GET" && path === "/notifications") return await listNotifications(event, data);
+    if (method === "POST" && path === "/notifications") return await sendNotification(event, data, store);
+
+    if (method === "GET" && path === "/knowledge") return await listKnowledge(event, data);
+    if (method === "POST" && path === "/knowledge") return await addKnowledge(event, data, store);
+
+    if (method === "PATCH" && path === "/customers/benefit") return await changeCustomerBenefit(event, data, store);
 
     if (method === "GET" && path === "/branch-performance") return await branchPerformance(event, data);
 
@@ -1189,4 +2399,153 @@ async function branchPerformance(event, data) {
       employees: Object.values(byEmployee)
     }
   });
+}
+
+
+async function listCatalogPlans(event, data) {
+  requireSession(data, event);
+  return json(200, { ok: true, plans: data.catalogPlans });
+}
+
+async function upsertCatalogPlan(event, data, store) {
+  const session = requireSession(data, event);
+  requireManager(session);
+  const body = await readBody(event);
+  const name = String(body.name || "").trim();
+  const price = Number(body.price || 0);
+  const category = String(body.category || "기타").trim();
+  const benefits = Array.isArray(body.benefits) ? body.benefits : String(body.benefits || "").split(",").map(x => x.trim()).filter(Boolean);
+  if (!name || !price) return json(400, { ok:false, message:"요금제명과 가격을 입력해줘." });
+
+  let plan = data.catalogPlans.find(p => p.name === name);
+  if (plan) {
+    plan.price = price; plan.category = category; plan.benefits = benefits; plan.hasBenefits = benefits.length > 0; plan.active = body.active !== false;
+  } else {
+    plan = { name, price, category, benefits, hasBenefits: benefits.length > 0, active: true, sourceNote: "관리자 추가" };
+    data.catalogPlans.push(plan);
+  }
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`요금제/상품 카탈로그 저장: ${name}` });
+  await writeDB(store, data);
+  return json(200, { ok:true, plan });
+}
+
+async function toggleCatalogPlan(event, path, data, store) {
+  const session = requireSession(data, event);
+  requireManager(session);
+  const name = decodeURIComponent(path.split("/").pop());
+  const body = await readBody(event);
+  const plan = data.catalogPlans.find(p => p.name === name);
+  if (!plan) return json(404, { ok:false, message:"요금제를 찾을 수 없어." });
+  if (typeof body.active === "boolean") plan.active = body.active;
+  if (Array.isArray(body.benefits)) { plan.benefits = body.benefits; plan.hasBenefits = body.benefits.length > 0; }
+  await writeDB(store, data);
+  return json(200, { ok:true, plan });
+}
+
+async function listInventory(event, data) {
+  const session = requireSession(data, event);
+  return json(200, { ok:true, inventory: data.inventory.filter(x => !x.branchId || x.branchId === session.branchId) });
+}
+
+async function addInventory(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const item = { id:crypto.randomUUID(), branchId:session.branchId, type:String(body.type||"단말기"), name:String(body.name||"").trim(), model:String(body.model||"").trim(), stock:Number(body.stock||0), status:String(body.status||"사용가능"), createdAt:now() };
+  if (!item.name) return json(400, { ok:false, message:"재고명을 입력해줘." });
+  data.inventory.push(item);
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`재고 추가: ${item.name} / ${item.stock}` });
+  await writeDB(store, data);
+  return json(201, { ok:true, item });
+}
+
+async function updateInventory(event, path, data, store) {
+  const session = requireSession(data, event);
+  const id = decodeURIComponent(path.split("/").pop());
+  const body = await readBody(event);
+  const item = data.inventory.find(x => x.id === id);
+  if (!item) return json(404, { ok:false, message:"재고를 찾을 수 없어." });
+  if (body.stock !== undefined) item.stock = Number(body.stock);
+  if (body.status) item.status = String(body.status);
+  item.updatedAt = now();
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`재고 수정: ${item.name} / ${item.stock}` });
+  await writeDB(store, data);
+  return json(200, { ok:true, item });
+}
+
+async function listMobileTracking(event, data) {
+  const session = requireSession(data, event);
+  return json(200, { ok:true, tracking: data.mobileTracking.filter(x => x.branchId === session.branchId).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)) });
+}
+
+async function createMobileTracking(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const item = { id:crypto.randomUUID(), branchId:session.branchId, name:String(body.name||"").trim(), phone:String(body.phone||"").trim(), oldCarrier:String(body.oldCarrier||"").trim(), plan:String(body.plan||"").trim(), status:"접수", createdAt:now(), updatedAt:now() };
+  if (!item.name || !item.phone) return json(400, { ok:false, message:"이름과 전화번호를 입력해줘." });
+  data.mobileTracking.push(item);
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`번호이동 추적 접수: ${item.name} / ${item.phone}` });
+  await writeDB(store, data);
+  return json(201, { ok:true, item });
+}
+
+async function updateMobileTracking(event, path, data, store) {
+  const session = requireSession(data, event);
+  const id = decodeURIComponent(path.split("/").pop());
+  const body = await readBody(event);
+  const item = data.mobileTracking.find(x => x.id === id && x.branchId === session.branchId);
+  if (!item) return json(404, { ok:false, message:"번호이동 건을 찾을 수 없어." });
+  item.status = String(body.status || item.status);
+  item.updatedAt = now();
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`번호이동 상태 변경: ${item.name} / ${item.status}` });
+  await writeDB(store, data);
+  return json(200, { ok:true, item });
+}
+
+async function listNotifications(event, data) {
+  const session = requireSession(data, event);
+  return json(200, { ok:true, notifications: data.notifications.filter(x => x.branchId === session.branchId).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,200) });
+}
+
+async function sendNotification(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const item = { id:crypto.randomUUID(), branchId:session.branchId, employeeId:session.employeeId, employeeName:session.employeeName, channel:String(body.channel||"SMS"), phone:String(body.phone||"").trim(), template:String(body.template||"직접입력"), message:String(body.message||"").trim(), status:"발송완료(시뮬레이션)", createdAt:now() };
+  if (!item.phone || !item.message) return json(400, { ok:false, message:"전화번호와 내용을 입력해줘." });
+  data.notifications.push(item);
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`알림 발송 시뮬레이션: ${item.channel} / ${item.phone}` });
+  await writeDB(store, data);
+  return json(201, { ok:true, item });
+}
+
+async function listKnowledge(event, data) {
+  requireSession(data, event);
+  return json(200, { ok:true, knowledge: data.knowledgeBase.sort((a,b)=>a.category.localeCompare(b.category)) });
+}
+
+async function addKnowledge(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const item = { id:crypto.randomUUID(), category:String(body.category||"일반"), title:String(body.title||"").trim(), content:String(body.content||"").trim(), createdAt:now() };
+  if (!item.title || !item.content) return json(400, { ok:false, message:"제목과 내용을 입력해줘." });
+  data.knowledgeBase.push(item);
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`지식베이스 추가: ${item.title}` });
+  await writeDB(store, data);
+  return json(201, { ok:true, item });
+}
+
+async function changeCustomerBenefit(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const phone = String(body.phone || "").trim();
+  const benefit = String(body.benefit || "").trim();
+  const customer = findCustomerByPhone(data, session, phone);
+  if (!customer) return json(404, { ok:false, message:"고객을 찾을 수 없어." });
+  const plan = data.catalogPlans.find(p => p.name === customer.plan);
+  if (!plan || !plan.benefits || !plan.benefits.length) return json(400, { ok:false, message:"이 고객의 현재 요금제에는 변경 가능한 혜택이 없어." });
+  if (!plan.benefits.includes(benefit)) return json(400, { ok:false, message:"해당 요금제의 혜택이 아니야." });
+  customer.selectedBenefit = benefit;
+  customer.updatedAt = now();
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`고객 혜택 변경: ${customer.name} / ${customer.plan} / ${benefit}` });
+  await writeDB(store, data);
+  return json(200, { ok:true, customer });
 }

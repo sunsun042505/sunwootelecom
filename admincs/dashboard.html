@@ -193,6 +193,11 @@ th { background:#f9fafb; color:#6b7280; }
         <button data-section="services">서비스 변경</button>
         <button data-section="employees">직원/권한</button>
         <button data-section="performance">실적/운영</button>
+        <button data-section="catalogManage">상품/요금제</button>
+        <button data-section="inventoryManage">재고 관리</button>
+        <button data-section="mobileTracking">번호이동 추적</button>
+        <button data-section="notifications">알림 발송</button>
+        <button data-section="knowledge">지식베이스</button>
         <button data-section="mobileMove">번호이동</button>
         <button data-section="openClose">신규가입</button>
         <button data-section="deviceChange">기기변경</button>
@@ -574,6 +579,21 @@ th { background:#f9fafb; color:#6b7280; }
         </div>
 
         <div class="panel">
+          <h2>요금제 혜택 변경</h2>
+          <p class="sub">고객이 미디어/OTT/제휴 혜택 대상 요금제를 사용 중이면 여기서 선택 혜택을 바꿀 수 있어.</p>
+          <div class="row">
+            <div><label>전화번호</label><input id="benefitPhone" placeholder="010-1234-5678" /></div>
+            <div>
+              <label>변경할 혜택</label>
+              <select id="benefitSelect">
+                <option value="">먼저 고객 상세 조회를 해줘</option>
+              </select>
+            </div>
+            <button class="btn green" onclick="changeCustomerBenefit()">혜택 변경</button>
+          </div>
+        </div>
+
+        <div class="panel">
           <h2>상담 이력 등록</h2>
           <div class="row">
             <div><label>전화번호</label><input id="consultPhone" placeholder="010-1234-5678" /></div>
@@ -850,6 +870,92 @@ th { background:#f9fafb; color:#6b7280; }
         <div class="panel">
           <h2>직원별 활동</h2>
           <div id="perfEmployeeTable"></div>
+        </div>
+      </section>
+
+
+      <section id="catalogManage" class="section">
+        <div class="panel">
+          <h2>상품/요금제 카탈로그 관리</h2>
+          <p class="sub">요금제 가격, 혜택, 활성 상태를 관리해. 매니저만 저장/비활성화 가능.</p>
+          <div class="row">
+            <div><label>요금제명</label><input id="catalogName" placeholder="예: 네버랩 5G 미디어" /></div>
+            <div><label>월정액</label><input id="catalogPrice" type="number" placeholder="59000" /></div>
+            <div><label>분류</label><input id="catalogCategory" placeholder="5G / LTE / 복지 / 청년" /></div>
+            <button class="btn green" onclick="saveCatalogPlan()">저장</button>
+          </div>
+          <label>혜택 목록(쉼표로 구분)</label>
+          <input id="catalogBenefits" placeholder="예: 티빙, 지니뮤직, VOD 쿠폰" />
+        </div>
+        <div class="panel">
+          <h2>요금제 100개 및 혜택</h2>
+          <div id="catalogTable"></div>
+        </div>
+      </section>
+
+      <section id="inventoryManage" class="section">
+        <div class="panel">
+          <h2>단말기/USIM 재고 관리</h2>
+          <div class="row">
+            <div><label>종류</label><select id="invType"><option>단말기</option><option>USIM</option><option>eSIM</option></select></div>
+            <div><label>재고명</label><input id="invName" placeholder="예: iPhone 17 Pro" /></div>
+            <div><label>모델/관리코드</label><input id="invModel" placeholder="예: A-17P-256" /></div>
+            <button class="btn green" onclick="addInventory()">재고 추가</button>
+          </div>
+          <label>수량</label><input id="invStock" type="number" value="1" />
+        </div>
+        <div class="panel">
+          <h2>재고 목록</h2>
+          <div id="inventoryTable"></div>
+        </div>
+      </section>
+
+      <section id="mobileTracking" class="section">
+        <div class="panel">
+          <h2>번호이동 진행상태 추적</h2>
+          <div class="row">
+            <div><label>이름</label><input id="trackName" /></div>
+            <div><label>전화번호</label><input id="trackPhone" /></div>
+            <div><label>기존 통신사</label><input id="trackCarrier" placeholder="SKT/KT/U+" /></div>
+            <button class="btn green" onclick="createMobileTrack()">추적 등록</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>번호이동 목록</h2>
+          <div id="mobileTrackTable"></div>
+        </div>
+      </section>
+
+      <section id="notifications" class="section">
+        <div class="panel">
+          <h2>고객 알림 발송 시뮬레이터</h2>
+          <div class="row">
+            <div><label>채널</label><select id="notiChannel"><option>SMS</option><option>알림톡</option><option>이메일</option></select></div>
+            <div><label>전화번호</label><input id="notiPhone" placeholder="010-1234-5678" /></div>
+            <div><label>템플릿</label><select id="notiTemplate" onchange="fillNotificationTemplate()"><option>직접입력</option><option>개통 완료</option><option>미납 안내</option><option>신분증 재촬영</option><option>번호이동 지연</option></select></div>
+            <button class="btn green" onclick="sendNotification()">발송 시뮬레이션</button>
+          </div>
+          <label>내용</label><input id="notiMessage" placeholder="발송할 안내 문구" />
+        </div>
+        <div class="panel">
+          <h2>발송 로그</h2>
+          <div id="notificationTable"></div>
+        </div>
+      </section>
+
+      <section id="knowledge" class="section">
+        <div class="panel">
+          <h2>상담 지식베이스</h2>
+          <div class="row">
+            <div><label>분류</label><input id="kbCategory" placeholder="요금/번호이동/USIM" /></div>
+            <div><label>제목</label><input id="kbTitle" /></div>
+            <button class="btn green" onclick="addKnowledge()">등록</button>
+          </div>
+          <label>내용</label><input id="kbContent" placeholder="상담원이 볼 안내 내용" />
+        </div>
+        <div class="panel">
+          <h2>응대 스크립트/매뉴얼</h2>
+          <div id="kbTable"></div>
         </div>
       </section>
 
@@ -1181,6 +1287,9 @@ th { background:#f9fafb; color:#6b7280; }
 
       const data = await api("/customers/" + encodeURIComponent(customer.id));
       const c = data.customer;
+      const benefitPhoneInput = document.getElementById("benefitPhone");
+      if (benefitPhoneInput) benefitPhoneInput.value = c.phone;
+      await populateBenefitSelectForCustomer(c);
       const raw = data.rawCustomer || {};
 
       el.innerHTML = `
@@ -1481,6 +1590,207 @@ th { background:#f9fafb; color:#6b7280; }
       if (active === "advancedBilling") await loadBills();
       if (active === "employees") await loadEmployees();
       if (active === "performance") await loadPerformance();
+      if (active === "catalogManage") await loadCatalogPlans();
+      if (active === "inventoryManage") await loadInventory();
+      if (active === "mobileTracking") await loadMobileTracking();
+      if (active === "notifications") await loadNotifications();
+      if (active === "knowledge") await loadKnowledge();
+    }
+
+
+    let catalogPlans = [];
+
+    async function loadCatalogPlans() {
+      const data = await api("/catalog/plans");
+      catalogPlans = data.plans;
+      const el = document.getElementById("catalogTable");
+      if (!el) return;
+      el.innerHTML = `
+        <table>
+          <thead><tr><th>요금제</th><th>월정액</th><th>분류</th><th>혜택</th><th>상태</th><th>처리</th></tr></thead>
+          <tbody>
+            ${catalogPlans.map(p => `
+              <tr>
+                <td>${p.name}</td>
+                <td>${money(p.price)}</td>
+                <td>${p.category || ""}</td>
+                <td>${(p.benefits || []).join(", ") || "-"}</td>
+                <td>${p.active ? "활성" : "비활성"}</td>
+                <td><button class="btn gray" onclick="toggleCatalogPlan('${encodeURIComponent(p.name)}', ${!p.active})">${p.active ? "비활성" : "활성"}</button></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function saveCatalogPlan() {
+      try {
+        await api("/catalog/plans", {
+          method: "POST",
+          body: JSON.stringify({
+            name: document.getElementById("catalogName").value.trim(),
+            price: Number(document.getElementById("catalogPrice").value),
+            category: document.getElementById("catalogCategory").value.trim(),
+            benefits: document.getElementById("catalogBenefits").value.split(",").map(x => x.trim()).filter(Boolean)
+          })
+        });
+        await loadCatalogPlans();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function toggleCatalogPlan(encodedName, active) {
+      try {
+        await api("/catalog/plans/" + encodedName, { method: "PATCH", body: JSON.stringify({ active }) });
+        await loadCatalogPlans();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadInventory() {
+      const data = await api("/inventory");
+      const el = document.getElementById("inventoryTable");
+      if (!el) return;
+      if (!data.inventory.length) { el.innerHTML = '<div class="empty">재고가 없어.</div>'; return; }
+      el.innerHTML = `
+        <table>
+          <thead><tr><th>종류</th><th>재고명</th><th>모델</th><th>수량</th><th>상태</th><th>수정</th></tr></thead>
+          <tbody>${data.inventory.map(i => `
+            <tr><td>${i.type}</td><td>${i.name}</td><td>${i.model}</td><td><input style="width:90px" id="stock_${i.id}" type="number" value="${i.stock}"></td><td>${i.status}</td>
+            <td><button class="btn" onclick="updateInventory('${i.id}')">저장</button></td></tr>
+          `).join("")}</tbody>
+        </table>
+      `;
+    }
+
+    async function addInventory() {
+      try {
+        await api("/inventory", {
+          method: "POST",
+          body: JSON.stringify({
+            type: document.getElementById("invType").value,
+            name: document.getElementById("invName").value.trim(),
+            model: document.getElementById("invModel").value.trim(),
+            stock: Number(document.getElementById("invStock").value || 0)
+          })
+        });
+        await loadInventory();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function updateInventory(id) {
+      try {
+        await api("/inventory/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ stock: Number(document.getElementById("stock_" + id).value) }) });
+        await loadInventory();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadMobileTracking() {
+      const data = await api("/mobile-tracking");
+      const el = document.getElementById("mobileTrackTable");
+      if (!el) return;
+      const states = ["접수","사전동의 대기","기존 통신사 확인","번호이동 승인","개통 완료","실패/반려"];
+      if (!data.tracking.length) { el.innerHTML = '<div class="empty">번호이동 추적 건이 없어.</div>'; return; }
+      el.innerHTML = `
+        <table><thead><tr><th>시간</th><th>이름</th><th>전화번호</th><th>기존통신사</th><th>상태</th><th>변경</th></tr></thead>
+        <tbody>${data.tracking.map(t => `
+          <tr><td>${safeDate(t.createdAt)}</td><td>${t.name}</td><td>${t.phone}</td><td>${t.oldCarrier}</td><td>${t.status}</td>
+          <td><select onchange="updateMobileTrack('${t.id}', this.value)">${states.map(s => `<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select></td></tr>
+        `).join("")}</tbody></table>
+      `;
+    }
+
+    async function createMobileTrack() {
+      try {
+        await api("/mobile-tracking", { method:"POST", body: JSON.stringify({
+          name: document.getElementById("trackName").value.trim(),
+          phone: document.getElementById("trackPhone").value.trim(),
+          oldCarrier: document.getElementById("trackCarrier").value.trim()
+        })});
+        await loadMobileTracking();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function updateMobileTrack(id, status) {
+      await api("/mobile-tracking/" + encodeURIComponent(id), { method:"PATCH", body: JSON.stringify({ status }) });
+      await loadMobileTracking();
+    }
+
+    function fillNotificationTemplate() {
+      const t = document.getElementById("notiTemplate").value;
+      const map = {
+        "개통 완료": "네버랩텔레콤입니다. 고객님의 개통이 완료되었습니다. 이용해 주셔서 감사합니다.",
+        "미납 안내": "네버랩텔레콤입니다. 미납 요금이 확인되어 납부 안내드립니다.",
+        "신분증 재촬영": "네버랩텔레콤입니다. 신분증 확인이 어려워 재촬영이 필요합니다.",
+        "번호이동 지연": "네버랩텔레콤입니다. 번호이동 처리에 시간이 소요되고 있습니다. 완료 즉시 안내드리겠습니다."
+      };
+      if (map[t]) document.getElementById("notiMessage").value = map[t];
+    }
+
+    async function sendNotification() {
+      try {
+        await api("/notifications", { method:"POST", body: JSON.stringify({
+          channel: document.getElementById("notiChannel").value,
+          phone: document.getElementById("notiPhone").value.trim(),
+          template: document.getElementById("notiTemplate").value,
+          message: document.getElementById("notiMessage").value.trim()
+        })});
+        await loadNotifications();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadNotifications() {
+      const data = await api("/notifications");
+      const el = document.getElementById("notificationTable");
+      if (!el) return;
+      if (!data.notifications.length) { el.innerHTML = '<div class="empty">발송 로그가 없어.</div>'; return; }
+      el.innerHTML = `
+        <table><thead><tr><th>시간</th><th>채널</th><th>전화번호</th><th>내용</th><th>상태</th><th>직원</th></tr></thead>
+        <tbody>${data.notifications.map(n => `<tr><td>${safeDate(n.createdAt)}</td><td>${n.channel}</td><td>${n.phone}</td><td>${n.message}</td><td>${n.status}</td><td>${n.employeeName}</td></tr>`).join("")}</tbody></table>
+      `;
+    }
+
+    async function loadKnowledge() {
+      const data = await api("/knowledge");
+      const el = document.getElementById("kbTable");
+      if (!el) return;
+      el.innerHTML = `
+        <table><thead><tr><th>분류</th><th>제목</th><th>내용</th></tr></thead>
+        <tbody>${data.knowledge.map(k => `<tr><td>${k.category}</td><td>${k.title}</td><td>${k.content}</td></tr>`).join("")}</tbody></table>
+      `;
+    }
+
+    async function addKnowledge() {
+      try {
+        await api("/knowledge", { method:"POST", body: JSON.stringify({
+          category: document.getElementById("kbCategory").value.trim(),
+          title: document.getElementById("kbTitle").value.trim(),
+          content: document.getElementById("kbContent").value.trim()
+        })});
+        await loadKnowledge();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function populateBenefitSelectForCustomer(customer) {
+      await loadCatalogPlans();
+      const plan = catalogPlans.find(p => p.name === customer.plan);
+      const select = document.getElementById("benefitSelect");
+      if (!select) return;
+      if (!plan || !plan.benefits || !plan.benefits.length) {
+        select.innerHTML = '<option value="">변경 가능한 혜택 없음</option>';
+        return;
+      }
+      select.innerHTML = plan.benefits.map(b => `<option value="${b}">${b}</option>`).join("");
+    }
+
+    async function changeCustomerBenefit() {
+      try {
+        await api("/customers/benefit", { method:"PATCH", body: JSON.stringify({
+          phone: document.getElementById("benefitPhone").value.trim(),
+          benefit: document.getElementById("benefitSelect").value
+        })});
+        alert("혜택 변경 완료");
+        await refreshAll();
+      } catch (err) { alert(err.message); }
     }
 
     document.getElementById("logoutBtn").addEventListener("click", async () => {
