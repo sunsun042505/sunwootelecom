@@ -370,6 +370,8 @@ th { background:#f9fafb; color:#6b7280; }
     const TOKEN_KEY = "neverlab_token";
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) location.href = "login.html";
+    const API = "/.netlify/functions/api";
+    async function api(path, options = {}) { const res = await fetch(API + path, { ...options, headers: { "Content-Type":"application/json", "Authorization":"Bearer "+token, ...(options.headers||{}) } }); const data = await res.json(); if(!res.ok) throw new Error(data.message || "요청 실패"); return data; }
 
     let precheck = JSON.parse(sessionStorage.getItem("neverlab_mobile_precheck") || "{}");
     let capturedPhoto = "";
@@ -507,7 +509,7 @@ th { background:#f9fafb; color:#6b7280; }
       signatureDone = false;
     }
 
-    function finishMobileSignup() {
+    async function finishMobileSignup() {
       if (!signatureDone) return alert("서명을 먼저 해줘.");
 
       const summary = {
@@ -525,6 +527,7 @@ th { background:#f9fafb; color:#6b7280; }
         completedAt: new Date().toISOString()
       };
 
+      try { await api("/line-complete", { method:"POST", body: JSON.stringify({ type:"번호이동", name:summary.name, phone:summary.phone, rrn7:summary.rrn7, oldCarrier:summary.oldCarrier, plan:summary.plan }) }); } catch(err) { alert(err.message); return; }
       sessionStorage.setItem("neverlab_mobile_last_result", JSON.stringify(summary));
 
       document.getElementById("completeSummary").innerHTML = `

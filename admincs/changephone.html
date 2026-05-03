@@ -1,0 +1,187 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>네버랩텔레콤 - 기기변경</title><style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f6fb;
+  color: #1f2937;
+}
+a { color: #2563eb; font-weight: 800; text-decoration: none; }
+.auth-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+h1 { margin: 0 0 8px; }
+.sub { margin: 0 0 24px; color: #6b7280; }
+label { display:block; margin: 14px 0 6px; font-weight: 800; font-size:14px; }
+input, select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+}
+input:focus, select:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.14); }
+button {
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 900;
+}
+.primary {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+}
+.primary:hover { background:#1d4ed8; }
+.msg { margin-top: 14px; min-height: 20px; font-size: 14px; }
+.error { color:#dc2626; }
+.success { color:#16a34a; }
+.link { margin-top:20px; text-align:center; font-size:14px; }
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.tab {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+}
+.tab.active { background: #2563eb; color: #fff; border-color:#2563eb; }
+.form-box { display: none; }
+.form-box.active { display: block; }
+
+header {
+  height: 64px;
+  background: #111827;
+  color: white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 0 24px;
+}
+.logo { font-size:20px; font-weight:900; }
+.user { font-size:14px; color:#d1d5db; }
+.layout {
+  display:grid;
+  grid-template-columns:240px 1fr;
+  min-height:calc(100vh - 64px);
+}
+aside {
+  background:#fff;
+  border-right:1px solid #e5e7eb;
+  padding:20px;
+}
+nav button {
+  width:100%;
+  display:block;
+  text-align:left;
+  padding:13px 14px;
+  margin-bottom:8px;
+  background:transparent;
+  color:#374151;
+}
+nav button.active, nav button:hover { background:#2563eb; color:#fff; }
+.logout {
+  margin-top:24px;
+  width:100%;
+  padding:13px;
+  background:#ef4444;
+  color:white;
+}
+main { padding:28px; }
+.title { margin:0 0 6px; font-size:28px; }
+.cards {
+  display:grid;
+  grid-template-columns:repeat(4, minmax(160px, 1fr));
+  gap:16px;
+  margin-bottom:24px;
+}
+.card, .panel {
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.06);
+}
+.card { padding:20px; }
+.label-small { color:#6b7280; font-size:14px; margin-bottom:10px; }
+.value { font-size:28px; font-weight:900; }
+.panel { padding:22px; margin-bottom:20px; }
+.panel h2 { margin:0 0 16px; font-size:20px; }
+.section { display:none; }
+.section.active { display:block; }
+.row {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr auto;
+  gap:10px;
+  align-items:end;
+}
+.btn {
+  padding:12px 16px;
+  background:#2563eb;
+  color:white;
+  white-space:nowrap;
+}
+.btn.green { background:#16a34a; }
+.btn.red { background:#dc2626; }
+.btn.gray { background:#6b7280; }
+table { width:100%; border-collapse:collapse; }
+th, td {
+  padding:13px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+  font-size:14px;
+}
+th { background:#f9fafb; color:#6b7280; }
+.badge {
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  background:#e5e7eb;
+}
+.badge.active { background:#dcfce7; color:#166534; }
+.badge.stop { background:#fee2e2; color:#991b1b; }
+.empty { color:#6b7280; padding:18px 0; }
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  aside { border-right:none; border-bottom:1px solid #e5e7eb; }
+  .cards { grid-template-columns:1fr 1fr; }
+  .row { grid-template-columns:1fr; }
+}
+
+.signup-wrap{max-width:980px;margin:0 auto}.stepbar{display:grid;gap:10px;margin-bottom:20px}.step{background:#fff;border:1px solid #e5e7eb;padding:12px;border-radius:14px;font-weight:900;text-align:center;color:#6b7280}.step.active{background:#2563eb;color:#fff}.step-page{display:none}.step-page.active{display:block}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.camera-box,.sign-box{border:2px dashed #cbd5e1;border-radius:18px;padding:20px;text-align:center;background:#f8fafc;margin-top:12px}video,canvas,img{max-width:100%;border-radius:14px;background:#111827}#signaturePad{width:100%;height:220px;background:white;border:1px solid #d1d5db;touch-action:none}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}.notice{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;padding:12px;border-radius:12px;margin:12px 0;font-size:14px}.done{text-align:center;padding:40px 20px}.done h2{font-size:34px;margin:0 0 12px;color:#16a34a}.usim-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.choice{border:1px solid #d1d5db;border-radius:18px;padding:20px;cursor:pointer;background:#fff}.choice.active{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.14)}@media(max-width:800px){.stepbar,.two,.usim-grid{grid-template-columns:1fr!important}}</style></head><body><header><div class="logo">네버랩텔레콤 기기변경</div><div class="user" id="userInfo">신청 진행</div></header><main><div class="signup-wrap"><h1 class="title">기기변경 신청서</h1><div class="stepbar" style="grid-template-columns:repeat(4,1fr)"><div class="step active" data-step-label="1">1. 조건/신청서</div><div class="step" data-step-label="2">2. 신분증</div><div class="step" data-step-label="3">3. 서명</div><div class="step" data-step-label="4">4. 완료</div></div>
+<section id="step1" class="panel step-page active"><h2>기기변경 조건 및 가입신청서</h2><div class="notice" id="precheckView"></div><div class="two"><div><label>제목</label><input id="formTitle" value="네버랩텔레콤 기기변경 신청서"></div><div><label>이름</label><input id="customerName"></div><div><label>전화번호</label><input id="phone"></div><div><label>바꿀 기기</label><input id="device" disabled></div><div><label>할부여부</label><select id="installment"><option>일시불</option><option>12개월 할부</option><option>24개월 할부</option><option>36개월 할부</option></select></div><div><label>약정여부</label><select id="contract"><option>선택약정 12개월</option><option>선택약정 24개월</option><option>공시지원 약정</option><option>무약정</option></select></div><div><label>요금제</label><select id="plan"><option value="5G 베이직">5G 베이직 / 55,000원</option><option value="5G 스탠다드">5G 스탠다드 / 75,000원</option><option value="LTE 라이트">LTE 라이트 / 33,000원</option></select></div><div><label>배송방법</label><select id="delivery"><option>지점 수령</option><option>택배 배송</option><option>당일 퀵 배송</option></select></div></div><div class="actions"><button class="btn gray" onclick="location.href='dashboard.html'">대시보드</button><button class="btn green" onclick="goStep2()">다음</button></div></section>
+<section id="step2" class="panel step-page"><h2>신분증 촬영 단계</h2><div class="camera-box"><video id="camera" autoplay playsinline width="640" height="360"></video><canvas id="photoCanvas" width="640" height="360" style="display:none"></canvas><div id="photoPreview"></div></div><div class="actions"><button class="btn gray" onclick="goStep(1)">이전</button><button class="btn" onclick="startCamera()">카메라 시작</button><button class="btn green" onclick="takePhoto()">촬영</button><button class="btn green" onclick="goStep3()">다음</button></div></section>
+<section id="step3" class="panel step-page"><h2>서명 단계</h2><div class="sign-box"><canvas id="signaturePad" width="900" height="220"></canvas></div><div class="actions"><button class="btn gray" onclick="goStep(2)">이전</button><button class="btn gray" onclick="clearSignature()">서명 지우기</button><button class="btn green" onclick="finishChangePhone()">다음</button></div></section>
+<section id="step4" class="panel step-page"><div class="done"><h2>기기변경이 완료됐습니다</h2><table id="completeSummary"></table><div class="actions" style="justify-content:center"><button class="btn" onclick="location.href='dashboard.html'">대시보드로 이동</button><button class="btn gray" onclick="location.href='changephone.html'">새 기기변경</button></div></div></section></div></main><script>
+const TOKEN_KEY='neverlab_token', token=localStorage.getItem(TOKEN_KEY); if(!token) location.href='login.html'; const API='/.netlify/functions/api'; let precheck=JSON.parse(sessionStorage.getItem('neverlab_changephone_precheck')||'{}'), capturedPhoto='', signatureDone=false, stream=null;
+async function api(path,options={}){const res=await fetch(API+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})}}); const data=await res.json(); if(!res.ok) throw new Error(data.message||'요청 실패'); return data;}
+function init(){customerName.value=precheck.name||''; phone.value=precheck.phone||''; device.value=precheck.device||''; userInfo.textContent=`${precheck.branchName||'지점'} / ${precheck.employeeName||'직원'}`; precheckView.innerHTML=`<b>기기변경 대상</b><br>이름: ${precheck.name||''} / 전화번호: ${precheck.phone||''} / 바꿀 기기: ${precheck.device||''}`; setupSignature();}
+function goStep(n){document.querySelectorAll('.step-page').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById('step'+n).classList.add('active');document.querySelector(`[data-step-label="${n}"]`).classList.add('active');}
+function goStep2(){if(!customerName.value.trim())return alert('이름을 입력해줘.'); if(!phone.value.trim())return alert('전화번호를 입력해줘.'); if(!device.value.trim())return alert('기기를 선택해줘.'); goStep(2);}
+async function startCamera(){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false}); camera.srcObject=stream;}catch{alert('카메라 권한을 확인해줘.')}}
+function takePhoto(){if(!camera.srcObject)return alert('먼저 카메라 시작을 눌러줘.'); photoCanvas.getContext('2d').drawImage(camera,0,0,photoCanvas.width,photoCanvas.height); capturedPhoto=photoCanvas.toDataURL('image/png'); photoPreview.innerHTML=`<p><b>촬영 완료</b></p><img src="${capturedPhoto}">`;}
+function goStep3(){if(!capturedPhoto)return alert('신분증 촬영을 먼저 해줘.'); if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;} goStep(3);}
+function setupSignature(){const c=signaturePad,ctx=c.getContext('2d');let d=false;const pos=e=>{const r=c.getBoundingClientRect(),p=e.touches?e.touches[0]:e;return {x:(p.clientX-r.left)*(c.width/r.width),y:(p.clientY-r.top)*(c.height/r.height)}};function st(e){d=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);e.preventDefault();}function mv(e){if(!d)return;const p=pos(e);ctx.lineWidth=3;ctx.lineCap='round';ctx.lineTo(p.x,p.y);ctx.stroke();signatureDone=true;e.preventDefault();}function en(){d=false}c.addEventListener('mousedown',st);c.addEventListener('mousemove',mv);window.addEventListener('mouseup',en);c.addEventListener('touchstart',st);c.addEventListener('touchmove',mv);window.addEventListener('touchend',en);}
+function clearSignature(){signaturePad.getContext('2d').clearRect(0,0,signaturePad.width,signaturePad.height);signatureDone=false;}
+async function finishChangePhone(){if(!signatureDone)return alert('서명을 먼저 해줘.');const s={title:formTitle.value.trim(),name:customerName.value.trim(),phone:phone.value.trim(),device:device.value,installment:installment.value,contract:contract.value,plan:plan.value,delivery:delivery.value,branchName:precheck.branchName||'',employeeName:precheck.employeeName||''};try{await api('/device-change-complete',{method:'POST',body:JSON.stringify(s)});}catch(e){alert(e.message);return;}completeSummary.innerHTML=`<tr><th>제목</th><td>${s.title}</td></tr><tr><th>이름</th><td>${s.name}</td></tr><tr><th>전화번호</th><td>${s.phone}</td></tr><tr><th>바꿀 기기</th><td>${s.device}</td></tr><tr><th>할부여부</th><td>${s.installment}</td></tr><tr><th>약정여부</th><td>${s.contract}</td></tr><tr><th>요금제</th><td>${s.plan}</td></tr><tr><th>배송방법</th><td>${s.delivery}</td></tr><tr><th>처리 지점/직원</th><td>${s.branchName} / ${s.employeeName}</td></tr>`;goStep(4);}
+init();</script></body></html>

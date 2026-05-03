@@ -187,7 +187,8 @@ th { background:#f9fafb; color:#6b7280; }
         <button class="active" data-section="home">대시보드</button>
         <button data-section="customers">고객 조회</button>
         <button data-section="mobileMove">번호이동</button>
-        <button data-section="openClose">개통 / 해지</button>
+        <button data-section="openClose">신규가입</button>
+        <button data-section="deviceChange">기기변경</button>
         <button data-section="billing">요금 관리</button>
         <button data-section="usage">사용량</button>
         <button data-section="logs">로그 기록</button>
@@ -294,23 +295,23 @@ th { background:#f9fafb; color:#6b7280; }
 
       <section id="openClose" class="section">
         <div class="panel">
-          <h2>신규 개통</h2>
+          <h2>신규가입 사전 확인</h2>
+          <p class="sub">약정여부, 요금제, 복지할인여부, 현역병여부를 확인한 뒤 신규가입 신청서로 이동해.</p>
           <div class="row">
-            <div><label>고객명</label><input id="newName" placeholder="고객명" /></div>
-            <div><label>전화번호</label><input id="newPhone" placeholder="010-0000-0000" /></div>
-            <div>
-              <label>요금제</label>
-              <select id="newPlan">
-                <option value="5G 베이직">5G 베이직 / 55,000원</option>
-                <option value="5G 스탠다드">5G 스탠다드 / 75,000원</option>
-                <option value="LTE 라이트">LTE 라이트 / 33,000원</option>
-              </select>
-            </div>
-            <button class="btn green" onclick="createCustomer()">개통</button>
+            <div><label>약정여부</label><select id="newJoinContract"><option value="선택약정 12개월">선택약정 12개월</option><option value="선택약정 24개월">선택약정 24개월</option><option value="무약정">무약정</option></select></div>
+            <div><label>요금제</label><select id="newJoinPlan"><option value="5G 베이직">5G 베이직 / 55,000원</option><option value="5G 스탠다드">5G 스탠다드 / 75,000원</option><option value="LTE 라이트">LTE 라이트 / 33,000원</option></select></div>
+            <div><label>복지할인여부</label><select id="newJoinWelfare"><option value="해당 없음">해당 없음</option><option value="해당 있음">해당 있음</option><option value="확인 필요">확인 필요</option></select></div>
+            <button class="btn green" onclick="goTelecomSignup()">확인</button>
+          </div>
+          <div class="row" style="margin-top:12px; grid-template-columns: 1fr 1fr 1fr auto;">
+            <div><label>현역병여부</label><select id="newJoinSoldier"><option value="아니오">아니오</option><option value="예">예</option><option value="확인 필요">확인 필요</option></select></div>
+            <div><label>담당 직원</label><input id="newJoinStaffPreview" disabled /></div>
+            <div><label>지점</label><input id="newJoinBranchPreview" disabled /></div>
+            <button class="btn gray" onclick="resetNewJoinCheck()">초기화</button>
           </div>
         </div>
         <div class="panel">
-          <h2>고객 목록 / 해지</h2>
+          <h2>가입 고객 목록 / 해지</h2>
           <div id="customerTable"></div>
         </div>
       </section>
@@ -327,6 +328,33 @@ th { background:#f9fafb; color:#6b7280; }
           <h2>사용량 시뮬레이션</h2>
           <div id="usageTable"></div>
         </div>
+      </section>
+
+
+      <section id="deviceChange" class="section">
+        <div class="panel"><h2>기기변경 접수</h2><p class="sub">고객 이름과 전화번호를 입력하고, 변경할 기기를 선택하면 신청서로 이동해.</p>
+          <div class="row"><div><label>이름</label><input id="changeName" placeholder="예: 홍길동" /></div><div><label>전화번호</label><input id="changePhone" placeholder="010-1234-5678" /></div><div><label>바꿀 기기 선택</label><select id="changeDevice"><option value="iPhone 17 Pro Max">iPhone 17 Pro Max</option>
+<option value="iPhone 17 Pro">iPhone 17 Pro</option>
+<option value="iPhone Air">iPhone Air</option>
+<option value="iPhone 17">iPhone 17</option>
+<option value="iPhone 17e">iPhone 17e</option>
+<option value="iPhone 16">iPhone 16</option>
+<option value="iPhone 16 Plus">iPhone 16 Plus</option>
+<option value="Samsung Galaxy S26 Ultra">Samsung Galaxy S26 Ultra</option>
+<option value="Samsung Galaxy S26+">Samsung Galaxy S26+</option>
+<option value="Samsung Galaxy S26">Samsung Galaxy S26</option>
+<option value="Samsung Galaxy S25 Ultra">Samsung Galaxy S25 Ultra</option>
+<option value="Samsung Galaxy S25">Samsung Galaxy S25</option>
+<option value="Samsung Galaxy Z Fold7">Samsung Galaxy Z Fold7</option>
+<option value="Samsung Galaxy Z Flip7">Samsung Galaxy Z Flip7</option>
+<option value="Samsung Galaxy Z TriFold">Samsung Galaxy Z TriFold</option>
+<option value="Samsung Galaxy A57 5G">Samsung Galaxy A57 5G</option>
+<option value="Samsung Galaxy A36 5G">Samsung Galaxy A36 5G</option>
+<option value="Google Pixel 10 Pro">Google Pixel 10 Pro</option>
+<option value="Google Pixel 10">Google Pixel 10</option>
+<option value="Google Pixel 10a">Google Pixel 10a</option></select></div><button class="btn green" onclick="goChangePhone()">기기변경 신청</button></div>
+        </div>
+        <div class="panel"><h2>기기변경 기기 목록</h2><table><thead><tr><th>번호</th><th>기기명</th></tr></thead><tbody><tr><td>1</td><td>iPhone 17 Pro Max</td></tr><tr><td>2</td><td>iPhone 17 Pro</td></tr><tr><td>3</td><td>iPhone Air</td></tr><tr><td>4</td><td>iPhone 17</td></tr><tr><td>5</td><td>iPhone 17e</td></tr><tr><td>6</td><td>iPhone 16</td></tr><tr><td>7</td><td>iPhone 16 Plus</td></tr><tr><td>8</td><td>Samsung Galaxy S26 Ultra</td></tr><tr><td>9</td><td>Samsung Galaxy S26+</td></tr><tr><td>10</td><td>Samsung Galaxy S26</td></tr><tr><td>11</td><td>Samsung Galaxy S25 Ultra</td></tr><tr><td>12</td><td>Samsung Galaxy S25</td></tr><tr><td>13</td><td>Samsung Galaxy Z Fold7</td></tr><tr><td>14</td><td>Samsung Galaxy Z Flip7</td></tr><tr><td>15</td><td>Samsung Galaxy Z TriFold</td></tr><tr><td>16</td><td>Samsung Galaxy A57 5G</td></tr><tr><td>17</td><td>Samsung Galaxy A36 5G</td></tr><tr><td>18</td><td>Google Pixel 10 Pro</td></tr><tr><td>19</td><td>Google Pixel 10</td></tr><tr><td>20</td><td>Google Pixel 10a</td></tr></tbody></table></div>
       </section>
 
       <section id="logs" class="section">
@@ -379,6 +407,7 @@ th { background:#f9fafb; color:#6b7280; }
         const branchPreview = document.getElementById("mobileBranchPreview");
         if (staffPreview) staffPreview.value = user.employeeName;
         if (branchPreview) branchPreview.value = user.branchName;
+        const njs=document.getElementById("newJoinStaffPreview"), njb=document.getElementById("newJoinBranchPreview"); if(njs) njs.value=user.employeeName; if(njb) njb.value=user.branchName;
       } catch {
         localStorage.removeItem(TOKEN_KEY);
         location.href = "login.html";
@@ -616,6 +645,21 @@ th { background:#f9fafb; color:#6b7280; }
 
       sessionStorage.setItem("neverlab_mobile_precheck", JSON.stringify(payload));
       location.href = "mobilesignup.html";
+    }
+
+
+    function resetNewJoinCheck() {
+      document.getElementById("newJoinContract").value="선택약정 12개월"; document.getElementById("newJoinPlan").value="5G 베이직"; document.getElementById("newJoinWelfare").value="해당 없음"; document.getElementById("newJoinSoldier").value="아니오";
+    }
+    function goTelecomSignup() {
+      sessionStorage.setItem("neverlab_telecom_precheck", JSON.stringify({ contract:document.getElementById("newJoinContract").value, plan:document.getElementById("newJoinPlan").value, welfare:document.getElementById("newJoinWelfare").value, soldier:document.getElementById("newJoinSoldier").value, branchName:user?.branchName||"", employeeName:user?.employeeName||"", createdAt:new Date().toISOString() }));
+      location.href="telecomsignup.html";
+    }
+    function goChangePhone() {
+      const name=document.getElementById("changeName").value.trim(), phone=document.getElementById("changePhone").value.trim(), device=document.getElementById("changeDevice").value;
+      if(!name) return alert("이름을 입력해줘."); if(!phone) return alert("전화번호를 입력해줘.");
+      sessionStorage.setItem("neverlab_changephone_precheck", JSON.stringify({ name, phone, device, branchName:user?.branchName||"", employeeName:user?.employeeName||"", createdAt:new Date().toISOString() }));
+      location.href="changephone.html";
     }
 
     document.getElementById("logoutBtn").addEventListener("click", async () => {

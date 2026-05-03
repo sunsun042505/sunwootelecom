@@ -199,6 +199,8 @@ export async function handler(event) {
     if (method === "POST" && path === "/customers") return await createCustomer(event, data, store);
     if (method === "PATCH" && path.startsWith("/customers/")) return await updateCustomer(event, path, data, store);
     if (method === "GET" && path === "/logs") return await listLogs(event, data);
+    if (method === "POST" && path === "/line-complete") return await lineComplete(event, data, store);
+    if (method === "POST" && path === "/device-change-complete") return await deviceChangeComplete(event, data, store);
 
     return json(404, { ok: false, message: "없는 API 주소야." });
   } catch (error) {
@@ -540,4 +542,43 @@ async function listLogs(event, data) {
     }));
 
   return json(200, { ok: true, logs });
+}
+
+
+async function lineComplete(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const type = String(body.type || '').trim();
+  const name = String(body.name || '').trim();
+  const phone = String(body.phone || '').trim();
+  const plan = String(body.plan || '').trim();
+  const rrn7 = String(body.rrn7 || '').trim();
+  const oldCarrier = String(body.oldCarrier || '').trim();
+  const usimType = String(body.usimType || '').trim();
+  if (!type || !name || !phone || !planPrices[plan]) return json(400, { ok:false, message:'가입 정보가 부족해.' });
+  if (rrn7 && !/^\d{7}$/.test(rrn7)) return json(400, { ok:false, message:'주민번호는 앞 7자리만 입력해야 해.' });
+  let customer = data.customers.find(c => c.phone === phone);
+  if (customer && customer.branchId !== session.branchId) return json(409, { ok:false, message:'다른 지점에 이미 등록된 전화번호야.' });
+  if (customer) {
+    customer.name=name; customer.plan=plan; customer.monthlyFee=planPrices[plan]; customer.status='active'; customer.unpaid=false;
+    customer.joinType=type; customer.oldCarrier=oldCarrier; customer.usimType=usimType || customer.usimType || ''; customer.updatedAt=now();
+  } else {
+    customer={ id:crypto.randomUUID(), branchId:session.branchId, name, phone, plan, monthlyFee:planPrices[plan], unpaid:false, status:'active', dataGb:0, callMinutes:0, smsCount:0, joinType:type, oldCarrier, usimType, createdAt:now() };
+    data.customers.push(customer);
+  }
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`${type} 완료 및 회선 등록: ${name} / ${phone} / ${plan}${usimType ? ' / '+usimType : ''}` });
+  await writeDB(store, data);
+  return json(201, { ok:true, message:`${type} 완료 및 회선 등록 완료.`, customer: mapCustomer(customer) });
+}
+
+async function deviceChangeComplete(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const name=String(body.name||'').trim(), phone=String(body.phone||'').trim(), device=String(body.device||'').trim(), plan=String(body.plan||'').trim();
+  if (!name || !phone || !device || !plan) return json(400, { ok:false, message:'기기변경 정보가 부족해.' });
+  const customer=data.customers.find(c => c.phone===phone && c.branchId===session.branchId);
+  if (customer) { customer.name=name; customer.device=device; if (planPrices[plan]) { customer.plan=plan; customer.monthlyFee=planPrices[plan]; } customer.updatedAt=now(); }
+  addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`기기변경 완료: ${name} / ${phone} / ${device} / ${plan}` });
+  await writeDB(store, data);
+  return json(201, { ok:true, message:'기기변경 완료.' });
 }
