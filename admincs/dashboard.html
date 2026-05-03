@@ -210,7 +210,7 @@ th { background:#f9fafb; color:#6b7280; }
 
     <main>
       <h1 class="title" id="pageTitle">대시보드</h1>
-      <p class="sub">네버랩텔레콤 지점 고객 응대용 CS 프로그램</p>
+      <p class="sub">네버랩텔레콤 지점 고객 응대용 CS 프로그램 · 고객/회선은 전 지점 공용 조회</p>
 
       <section id="home" class="section active">
         <div class="cards">
@@ -1063,12 +1063,13 @@ th { background:#f9fafb; color:#6b7280; }
       }
       el.innerHTML = `
         <table>
-          <thead><tr><th>고객명</th><th>전화번호</th><th>요금제</th><th>상태</th><th>처리</th></tr></thead>
+          <thead><tr><th>고객명</th><th>전화번호</th><th>가입지점</th><th>요금제</th><th>상태</th><th>처리</th></tr></thead>
           <tbody>
             ${customers.map(c => `
               <tr>
                 <td>${c.name}</td>
                 <td>${c.phone}</td>
+                <td>${c.branchName || "-"}</td>
                 <td>${c.plan}</td>
                 <td><span class="badge ${c.status === "active" ? "active" : "stop"}">${c.status === "active" ? "정상" : "해지"}</span></td>
                 <td>

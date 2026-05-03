@@ -1736,7 +1736,7 @@ async function listBranches(data) {
 
 async function dashboard(event, data) {
   const session = requireSession(data, event);
-  const customers = data.customers.filter(c => c.branchId === session.branchId);
+  const customers = data.customers;
   const logs = data.logs.filter(l => l.branchId === session.branchId);
   const today = new Date().toISOString().slice(0, 10);
 
@@ -1757,10 +1757,10 @@ async function dashboard(event, data) {
 }
 
 async function listCustomers(event, data) {
-  const session = requireSession(data, event);
+  requireSession(data, event);
   const phone = event.queryStringParameters?.phone || "";
 
-  let customers = data.customers.filter(c => c.branchId === session.branchId);
+  let customers = data.customers;
 
   if (phone) {
     customers = customers.filter(c => c.phone.includes(phone));
@@ -1769,7 +1769,17 @@ async function listCustomers(event, data) {
   customers = customers
     .slice()
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .map(mapCustomer);
+    .map(c => {
+      const branch = data.branches.find(b => b.id === c.branchId);
+      return {
+        ...mapCustomer(c),
+        branchId: c.branchId,
+        branchName: branch?.branchName || "",
+        joinType: c.joinType || "",
+        usimType: c.usimType || "",
+        device: c.device || ""
+      };
+    });
 
   return json(200, { ok: true, customers });
 }
@@ -1824,7 +1834,7 @@ async function updateCustomer(event, path, data, store) {
   const session = requireSession(data, event);
   const customerId = decodeURIComponent(path.split("/")[2]);
   const body = await readBody(event);
-  const customer = data.customers.find(c => c.id === customerId && c.branchId === session.branchId);
+  const customer = data.customers.find(c => c.id === customerId);
 
   if (!customer) {
     return json(404, { ok: false, message: "고객을 찾을 수 없어." });
@@ -1931,11 +1941,13 @@ async function deviceChangeComplete(event, data, store) {
 
 
 function getBranchCustomers(data, session) {
-  return data.customers.filter(c => c.branchId === session.branchId);
+  // 네버랩텔레콤은 고객/회선을 전 지점 공용으로 조회하도록 변경.
+  return data.customers;
 }
 
 function findCustomerByPhone(data, session, phone) {
-  return data.customers.find(c => c.branchId === session.branchId && c.phone === phone);
+  // 모든 지점에서 같은 고객 전화번호를 조회할 수 있게 함.
+  return data.customers.find(c => c.phone === phone);
 }
 
 function requireManager(session) {
@@ -1949,7 +1961,7 @@ function requireManager(session) {
 async function customerDetail(event, path, data) {
   const session = requireSession(data, event);
   const customerId = decodeURIComponent(path.split("/")[2]);
-  const customer = data.customers.find(c => c.id === customerId && c.branchId === session.branchId);
+  const customer = data.customers.find(c => c.id === customerId);
 
   if (!customer) return json(404, { ok: false, message: "고객을 찾을 수 없어." });
 
