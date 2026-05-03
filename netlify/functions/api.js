@@ -134,13 +134,28 @@ function emptyDB() {
     employees: [],
     sessions: [],
     customers: [],
-    logs: []
+    logs: [],
+    consultations: [],
+    tickets: [],
+    applications: [],
+    bills: [],
+    serviceOrders: []
   };
 }
 
 async function readDB(store) {
-  const data = await store.get(DB_KEY, { type: "json" });
-  return data || emptyDB();
+  const data = await store.get(DB_KEY, { type: "json" }) || emptyDB();
+  data.branches ||= [];
+  data.employees ||= [];
+  data.sessions ||= [];
+  data.customers ||= [];
+  data.logs ||= [];
+  data.consultations ||= [];
+  data.tickets ||= [];
+  data.applications ||= [];
+  data.bills ||= [];
+  data.serviceOrders ||= [];
+  return data;
 }
 
 async function writeDB(store, data) {
@@ -298,6 +313,30 @@ export async function handler(event) {
     if (method === "GET" && path === "/logs") return await listLogs(event, data);
     if (method === "POST" && path === "/line-complete") return await lineComplete(event, data, store);
     if (method === "POST" && path === "/device-change-complete") return await deviceChangeComplete(event, data, store);
+
+    if (method === "GET" && path.startsWith("/customers/")) return await customerDetail(event, path, data);
+    if (method === "POST" && path.startsWith("/consultations")) return await createConsultation(event, data, store);
+    if (method === "GET" && path === "/consultations") return await listConsultations(event, data);
+
+    if (method === "POST" && path === "/tickets") return await createTicket(event, data, store);
+    if (method === "GET" && path === "/tickets") return await listTickets(event, data);
+    if (method === "PATCH" && path.startsWith("/tickets/")) return await updateTicket(event, path, data, store);
+
+    if (method === "GET" && path === "/applications") return await listApplications(event, data);
+    if (method === "PATCH" && path.startsWith("/applications/")) return await updateApplication(event, path, data, store);
+
+    if (method === "POST" && path === "/billing/generate") return await generateBills(event, data, store);
+    if (method === "GET" && path === "/billing") return await listBills(event, data);
+    if (method === "PATCH" && path.startsWith("/billing/")) return await updateBill(event, path, data, store);
+
+    if (method === "POST" && path === "/plan-change") return await planChange(event, data, store);
+    if (method === "POST" && path === "/addons") return await addonChange(event, data, store);
+    if (method === "POST" && path === "/usim-reissue") return await usimReissue(event, data, store);
+
+    if (method === "GET" && path === "/employees") return await listEmployees(event, data);
+    if (method === "PATCH" && path.startsWith("/employees/")) return await updateEmployeeRole(event, path, data, store);
+
+    if (method === "GET" && path === "/branch-performance") return await branchPerformance(event, data);
 
     return json(404, { ok: false, message: "없는 API 주소야." });
   } catch (error) {
@@ -678,4 +717,476 @@ async function deviceChangeComplete(event, data, store) {
   addLog(data, { branchId:session.branchId, employeeId:session.employeeId, branchName:session.branchName, employeeName:session.employeeName, action:`기기변경 완료: ${name} / ${phone} / ${device} / ${plan}` });
   await writeDB(store, data);
   return json(201, { ok:true, message:'기기변경 완료.' });
+}
+
+
+function getBranchCustomers(data, session) {
+  return data.customers.filter(c => c.branchId === session.branchId);
+}
+
+function findCustomerByPhone(data, session, phone) {
+  return data.customers.find(c => c.branchId === session.branchId && c.phone === phone);
+}
+
+function requireManager(session) {
+  if (session.role !== "manager") {
+    const err = new Error("매니저 권한이 필요해.");
+    err.statusCode = 403;
+    throw err;
+  }
+}
+
+async function customerDetail(event, path, data) {
+  const session = requireSession(data, event);
+  const customerId = decodeURIComponent(path.split("/")[2]);
+  const customer = data.customers.find(c => c.id === customerId && c.branchId === session.branchId);
+
+  if (!customer) return json(404, { ok: false, message: "고객을 찾을 수 없어." });
+
+  const consultations = data.consultations
+    .filter(x => x.customerId === customer.id)
+    .slice()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  const tickets = data.tickets
+    .filter(x => x.customerId === customer.id)
+    .slice()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  const bills = data.bills
+    .filter(x => x.customerId === customer.id)
+    .slice()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  const apps = data.applications
+    .filter(x => x.customerId === customer.id || x.phone === customer.phone)
+    .slice()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  return json(200, {
+    ok: true,
+    customer: mapCustomer(customer),
+    rawCustomer: customer,
+    consultations,
+    tickets,
+    bills,
+    applications: apps
+  });
+}
+
+async function createConsultation(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+
+  const phone = String(body.phone || "").trim();
+  const category = String(body.category || "일반상담").trim();
+  const memo = String(body.memo || "").trim();
+  const nextContactAt = String(body.nextContactAt || "").trim();
+
+  const customer = findCustomerByPhone(data, session, phone);
+  if (!customer) return json(404, { ok: false, message: "고객 전화번호를 찾을 수 없어." });
+  if (!memo) return json(400, { ok: false, message: "상담 내용을 입력해줘." });
+
+  const item = {
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    employeeName: session.employeeName,
+    customerId: customer.id,
+    customerName: customer.name,
+    phone,
+    category,
+    memo,
+    nextContactAt,
+    status: "완료",
+    createdAt: now()
+  };
+
+  data.consultations.push(item);
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `상담 이력 등록: ${customer.name} / ${phone} / ${category}`
+  });
+
+  await writeDB(store, data);
+  return json(201, { ok: true, consultation: item });
+}
+
+async function listConsultations(event, data) {
+  const session = requireSession(data, event);
+  const items = data.consultations
+    .filter(x => x.branchId === session.branchId)
+    .slice()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, 200);
+
+  return json(200, { ok: true, consultations: items });
+}
+
+async function createTicket(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+
+  const phone = String(body.phone || "").trim();
+  const type = String(body.type || "일반민원").trim();
+  const priority = String(body.priority || "보통").trim();
+  const memo = String(body.memo || "").trim();
+
+  const customer = findCustomerByPhone(data, session, phone);
+  if (!customer) return json(404, { ok: false, message: "고객 전화번호를 찾을 수 없어." });
+  if (!memo) return json(400, { ok: false, message: "장애/민원 내용을 입력해줘." });
+
+  const item = {
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    employeeName: session.employeeName,
+    customerId: customer.id,
+    customerName: customer.name,
+    phone,
+    type,
+    priority,
+    memo,
+    status: "접수",
+    createdAt: now(),
+    updatedAt: now()
+  };
+
+  data.tickets.push(item);
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `장애/민원 접수: ${customer.name} / ${phone} / ${type}`
+  });
+
+  await writeDB(store, data);
+  return json(201, { ok: true, ticket: item });
+}
+
+async function listTickets(event, data) {
+  const session = requireSession(data, event);
+  const tickets = data.tickets
+    .filter(x => x.branchId === session.branchId)
+    .slice()
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+
+  return json(200, { ok: true, tickets });
+}
+
+async function updateTicket(event, path, data, store) {
+  const session = requireSession(data, event);
+  const id = decodeURIComponent(path.split("/")[2]);
+  const body = await readBody(event);
+  const ticket = data.tickets.find(x => x.id === id && x.branchId === session.branchId);
+  if (!ticket) return json(404, { ok: false, message: "티켓을 찾을 수 없어." });
+
+  ticket.status = String(body.status || ticket.status);
+  ticket.updatedAt = now();
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `티켓 상태 변경: ${ticket.customerName} / ${ticket.status}`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok: true, ticket });
+}
+
+async function listApplications(event, data) {
+  const session = requireSession(data, event);
+  const applications = data.applications
+    .filter(x => x.branchId === session.branchId)
+    .slice()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  return json(200, { ok: true, applications });
+}
+
+async function updateApplication(event, path, data, store) {
+  const session = requireSession(data, event);
+  const id = decodeURIComponent(path.split("/")[2]);
+  const body = await readBody(event);
+  const app = data.applications.find(x => x.id === id && x.branchId === session.branchId);
+  if (!app) return json(404, { ok: false, message: "신청 건을 찾을 수 없어." });
+
+  app.status = String(body.status || app.status);
+  app.updatedAt = now();
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `신청 상태 변경: ${app.type} / ${app.name} / ${app.status}`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok: true, application: app });
+}
+
+async function generateBills(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const billingMonth = String(body.billingMonth || new Date().toISOString().slice(0, 7));
+
+  const customers = getBranchCustomers(data, session).filter(c => c.status === "active");
+  let created = 0;
+
+  for (const c of customers) {
+    const exists = data.bills.some(b => b.customerId === c.id && b.billingMonth === billingMonth);
+    if (exists) continue;
+
+    data.bills.push({
+      id: crypto.randomUUID(),
+      branchId: session.branchId,
+      customerId: c.id,
+      customerName: c.name,
+      phone: c.phone,
+      plan: c.plan,
+      billingMonth,
+      amount: c.monthlyFee || 0,
+      status: "미납",
+      createdAt: now(),
+      paidAt: ""
+    });
+    c.unpaid = true;
+    created++;
+  }
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `월 청구 생성: ${billingMonth} / ${created}건`
+  });
+
+  await writeDB(store, data);
+  return json(201, { ok: true, message: `${created}건 청구서를 생성했어.`, created });
+}
+
+async function listBills(event, data) {
+  const session = requireSession(data, event);
+  const bills = data.bills
+    .filter(x => x.branchId === session.branchId)
+    .slice()
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  return json(200, { ok: true, bills });
+}
+
+async function updateBill(event, path, data, store) {
+  const session = requireSession(data, event);
+  const id = decodeURIComponent(path.split("/")[2]);
+  const bill = data.bills.find(x => x.id === id && x.branchId === session.branchId);
+  if (!bill) return json(404, { ok: false, message: "청구서를 찾을 수 없어." });
+
+  bill.status = "납부완료";
+  bill.paidAt = now();
+
+  const customer = data.customers.find(c => c.id === bill.customerId);
+  if (customer) {
+    const unpaidLeft = data.bills.some(b => b.customerId === customer.id && b.status !== "납부완료" && b.id !== bill.id);
+    customer.unpaid = unpaidLeft;
+  }
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `청구서 납부 처리: ${bill.customerName} / ${bill.billingMonth} / ${bill.amount}원`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok: true, bill });
+}
+
+async function planChange(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const phone = String(body.phone || "").trim();
+  const newPlan = String(body.newPlan || "").trim();
+  const mode = String(body.mode || "즉시 변경").trim();
+
+  const customer = findCustomerByPhone(data, session, phone);
+  if (!customer) return json(404, { ok: false, message: "고객 전화번호를 찾을 수 없어." });
+  if (!planPrices[newPlan]) return json(400, { ok: false, message: "요금제를 확인해줘." });
+
+  const oldPlan = customer.plan;
+  customer.plan = newPlan;
+  customer.monthlyFee = planPrices[newPlan];
+
+  data.serviceOrders.push({
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    customerId: customer.id,
+    type: "요금제 변경",
+    oldValue: oldPlan,
+    newValue: newPlan,
+    status: mode,
+    createdAt: now()
+  });
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `요금제 변경: ${customer.name} / ${oldPlan} → ${newPlan}`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok: true, customer: mapCustomer(customer) });
+}
+
+async function addonChange(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const phone = String(body.phone || "").trim();
+  const addon = String(body.addon || "").trim();
+  const action = String(body.action || "가입").trim();
+
+  const customer = findCustomerByPhone(data, session, phone);
+  if (!customer) return json(404, { ok: false, message: "고객 전화번호를 찾을 수 없어." });
+
+  customer.addons ||= [];
+  if (action === "가입" && !customer.addons.includes(addon)) customer.addons.push(addon);
+  if (action === "해지") customer.addons = customer.addons.filter(x => x !== addon);
+
+  data.serviceOrders.push({
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    customerId: customer.id,
+    type: "부가서비스",
+    oldValue: addon,
+    newValue: action,
+    status: "완료",
+    createdAt: now()
+  });
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `부가서비스 ${action}: ${customer.name} / ${addon}`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok: true, customer });
+}
+
+async function usimReissue(event, data, store) {
+  const session = requireSession(data, event);
+  const body = await readBody(event);
+  const phone = String(body.phone || "").trim();
+  const simType = String(body.simType || "USIM").trim();
+  const reason = String(body.reason || "분실/파손").trim();
+
+  const customer = findCustomerByPhone(data, session, phone);
+  if (!customer) return json(404, { ok: false, message: "고객 전화번호를 찾을 수 없어." });
+
+  customer.usimType = simType;
+  customer.usimReissuedAt = now();
+
+  data.serviceOrders.push({
+    id: crypto.randomUUID(),
+    branchId: session.branchId,
+    customerId: customer.id,
+    type: "USIM/eSIM 재발급",
+    oldValue: reason,
+    newValue: simType,
+    status: "완료",
+    createdAt: now()
+  });
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `${simType} 재발급: ${customer.name} / ${phone} / ${reason}`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok: true, customer });
+}
+
+async function listEmployees(event, data) {
+  const session = requireSession(data, event);
+  requireManager(session);
+
+  const employees = data.employees
+    .filter(e => e.branchId === session.branchId)
+    .map(e => ({
+      id: e.id,
+      employeeName: e.employeeName,
+      role: e.role,
+      createdAt: e.createdAt
+    }));
+
+  return json(200, { ok: true, employees });
+}
+
+async function updateEmployeeRole(event, path, data, store) {
+  const session = requireSession(data, event);
+  requireManager(session);
+
+  const id = decodeURIComponent(path.split("/")[2]);
+  const body = await readBody(event);
+  const role = body.role === "manager" ? "manager" : "staff";
+
+  const employee = data.employees.find(e => e.id === id && e.branchId === session.branchId);
+  if (!employee) return json(404, { ok: false, message: "직원을 찾을 수 없어." });
+
+  employee.role = role;
+
+  addLog(data, {
+    branchId: session.branchId,
+    employeeId: session.employeeId,
+    branchName: session.branchName,
+    employeeName: session.employeeName,
+    action: `직원 권한 변경: ${employee.employeeName} → ${role}`
+  });
+
+  await writeDB(store, data);
+  return json(200, { ok: true, employee: { id: employee.id, employeeName: employee.employeeName, role } });
+}
+
+async function branchPerformance(event, data) {
+  const session = requireSession(data, event);
+  const today = new Date().toISOString().slice(0, 10);
+  const apps = data.applications.filter(a => a.branchId === session.branchId);
+  const logs = data.logs.filter(l => l.branchId === session.branchId);
+  const tickets = data.tickets.filter(t => t.branchId === session.branchId);
+  const bills = data.bills.filter(b => b.branchId === session.branchId);
+
+  const byEmployee = {};
+  for (const l of logs) {
+    byEmployee[l.employeeName] ||= { employeeName: l.employeeName, logs: 0, joins: 0, tickets: 0 };
+    byEmployee[l.employeeName].logs++;
+    if (l.action.includes("가입") || l.action.includes("번호이동") || l.action.includes("기기변경")) byEmployee[l.employeeName].joins++;
+    if (l.action.includes("민원") || l.action.includes("티켓")) byEmployee[l.employeeName].tickets++;
+  }
+
+  return json(200, {
+    ok: true,
+    performance: {
+      todayApplications: apps.filter(a => a.createdAt.slice(0, 10) === today).length,
+      totalApplications: apps.length,
+      openTickets: tickets.filter(t => t.status !== "완료").length,
+      unpaidBills: bills.filter(b => b.status !== "납부완료").length,
+      paidAmount: bills.filter(b => b.status === "납부완료").reduce((sum, b) => sum + Number(b.amount || 0), 0),
+      employees: Object.values(byEmployee)
+    }
+  });
 }

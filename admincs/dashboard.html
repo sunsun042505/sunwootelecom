@@ -186,6 +186,13 @@ th { background:#f9fafb; color:#6b7280; }
       <nav>
         <button class="active" data-section="home">대시보드</button>
         <button data-section="customers">고객 조회</button>
+        <button data-section="customerDetail">고객 상세/상담</button>
+        <button data-section="tickets">장애/민원</button>
+        <button data-section="applications">신청 관리</button>
+        <button data-section="advancedBilling">청구/수납</button>
+        <button data-section="services">서비스 변경</button>
+        <button data-section="employees">직원/권한</button>
+        <button data-section="performance">실적/운영</button>
         <button data-section="mobileMove">번호이동</button>
         <button data-section="openClose">신규가입</button>
         <button data-section="deviceChange">기기변경</button>
@@ -555,6 +562,297 @@ th { background:#f9fafb; color:#6b7280; }
         <div class="panel"><h2>기기변경 기기 목록</h2><table><thead><tr><th>번호</th><th>기기명</th></tr></thead><tbody><tr><td>1</td><td>iPhone 17 Pro Max</td></tr><tr><td>2</td><td>iPhone 17 Pro</td></tr><tr><td>3</td><td>iPhone Air</td></tr><tr><td>4</td><td>iPhone 17</td></tr><tr><td>5</td><td>iPhone 17e</td></tr><tr><td>6</td><td>iPhone 16</td></tr><tr><td>7</td><td>iPhone 16 Plus</td></tr><tr><td>8</td><td>Samsung Galaxy S26 Ultra</td></tr><tr><td>9</td><td>Samsung Galaxy S26+</td></tr><tr><td>10</td><td>Samsung Galaxy S26</td></tr><tr><td>11</td><td>Samsung Galaxy S25 Ultra</td></tr><tr><td>12</td><td>Samsung Galaxy S25</td></tr><tr><td>13</td><td>Samsung Galaxy Z Fold7</td></tr><tr><td>14</td><td>Samsung Galaxy Z Flip7</td></tr><tr><td>15</td><td>Samsung Galaxy Z TriFold</td></tr><tr><td>16</td><td>Samsung Galaxy A57 5G</td></tr><tr><td>17</td><td>Samsung Galaxy A36 5G</td></tr><tr><td>18</td><td>Google Pixel 10 Pro</td></tr><tr><td>19</td><td>Google Pixel 10</td></tr><tr><td>20</td><td>Google Pixel 10a</td></tr></tbody></table></div>
       </section>
 
+
+      <section id="customerDetail" class="section">
+        <div class="panel">
+          <h2>고객 상세 조회</h2>
+          <div class="row">
+            <div><label>전화번호</label><input id="detailPhone" placeholder="010-1234-5678" /></div>
+            <button class="btn" onclick="loadCustomerDetailByPhone()">고객 상세 열기</button>
+          </div>
+          <div id="detailResult" style="margin-top:16px;"></div>
+        </div>
+
+        <div class="panel">
+          <h2>상담 이력 등록</h2>
+          <div class="row">
+            <div><label>전화번호</label><input id="consultPhone" placeholder="010-1234-5678" /></div>
+            <div>
+              <label>상담 유형</label>
+              <select id="consultCategory">
+                <option>요금 문의</option>
+                <option>해지 문의</option>
+                <option>번호이동 문의</option>
+                <option>기기변경 문의</option>
+                <option>통화품질 문의</option>
+                <option>일반상담</option>
+              </select>
+            </div>
+            <div><label>다음 연락일</label><input id="consultNext" type="date" /></div>
+            <button class="btn green" onclick="createConsultation()">상담 저장</button>
+          </div>
+          <label>상담 내용</label>
+          <input id="consultMemo" placeholder="상담 내용을 입력해줘" />
+        </div>
+
+        <div class="panel">
+          <h2>최근 상담 이력</h2>
+          <div id="consultTable"></div>
+        </div>
+      </section>
+
+      <section id="tickets" class="section">
+        <div class="panel">
+          <h2>장애/민원 티켓 접수</h2>
+          <div class="row">
+            <div><label>전화번호</label><input id="ticketPhone" placeholder="010-1234-5678" /></div>
+            <div>
+              <label>유형</label>
+              <select id="ticketType">
+                <option>통화품질</option>
+                <option>데이터 장애</option>
+                <option>문자 장애</option>
+                <option>요금 민원</option>
+                <option>개통 지연</option>
+                <option>일반민원</option>
+              </select>
+            </div>
+            <div>
+              <label>우선순위</label>
+              <select id="ticketPriority">
+                <option>낮음</option>
+                <option selected>보통</option>
+                <option>높음</option>
+                <option>긴급</option>
+              </select>
+            </div>
+            <button class="btn green" onclick="createTicket()">티켓 접수</button>
+          </div>
+          <label>내용</label>
+          <input id="ticketMemo" placeholder="장애/민원 내용을 입력해줘" />
+        </div>
+        <div class="panel">
+          <h2>티켓 목록</h2>
+          <div id="ticketTable"></div>
+        </div>
+      </section>
+
+      <section id="applications" class="section">
+        <div class="panel">
+          <h2>가입 신청 목록 / 심사 상태</h2>
+          <div id="applicationTable"></div>
+        </div>
+      </section>
+
+      <section id="advancedBilling" class="section">
+        <div class="panel">
+          <h2>월 청구서 생성</h2>
+          <div class="row">
+            <div><label>청구월</label><input id="billingMonth" type="month" /></div>
+            <button class="btn green" onclick="generateBills()">청구서 생성</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>청구/수납 목록</h2>
+          <div id="billTable"></div>
+        </div>
+      </section>
+
+      <section id="services" class="section">
+        <div class="panel">
+          <h2>요금제 변경</h2>
+          <div class="row">
+            <div><label>전화번호</label><input id="planPhone" placeholder="010-1234-5678" /></div>
+            <div>
+              <label>새 요금제</label>
+              <select id="planNew">
+<option value="SKT 5GX 프리미엄">SKT 5GX 프리미엄 / 109,000원</option>
+<option value="SKT 5GX 프라임플러스">SKT 5GX 프라임플러스 / 99,000원</option>
+<option value="SKT 5GX 프라임">SKT 5GX 프라임 / 89,000원</option>
+<option value="SKT 5GX 레귤러플러스">SKT 5GX 레귤러플러스 / 79,000원</option>
+<option value="SKT 5GX 레귤러">SKT 5GX 레귤러 / 69,000원</option>
+<option value="SKT 5G 베이직플러스">SKT 5G 베이직플러스 / 59,000원</option>
+<option value="SKT 5G 베이직">SKT 5G 베이직 / 49,000원</option>
+<option value="SKT 다이렉트5G 76">SKT 다이렉트5G 76 / 76,000원</option>
+<option value="SKT 다이렉트5G 69">SKT 다이렉트5G 69 / 69,000원</option>
+<option value="SKT 다이렉트5G 62">SKT 다이렉트5G 62 / 62,000원</option>
+<option value="SKT 다이렉트5G 55">SKT 다이렉트5G 55 / 55,000원</option>
+<option value="SKT 다이렉트5G 48">SKT 다이렉트5G 48 / 48,000원</option>
+<option value="SKT 0청년 109">SKT 0청년 109 / 109,000원</option>
+<option value="SKT 0청년 99">SKT 0청년 99 / 99,000원</option>
+<option value="SKT 0청년 79">SKT 0청년 79 / 79,000원</option>
+<option value="SKT 0청년 69">SKT 0청년 69 / 69,000원</option>
+<option value="SKT 0청년 59">SKT 0청년 59 / 59,000원</option>
+<option value="SKT 0틴 5G">SKT 0틴 5G / 45,000원</option>
+<option value="SKT 5G ZEM 퍼펙트">SKT 5G ZEM 퍼펙트 / 36,000원</option>
+<option value="SKT 주말엔 팅 3GB">SKT 주말엔 팅 3GB / 41,000원</option>
+<option value="SKT LTE 데이터ON 프리미엄">SKT LTE 데이터ON 프리미엄 / 89,000원</option>
+<option value="SKT LTE 데이터ON 스탠다드">SKT LTE 데이터ON 스탠다드 / 69,000원</option>
+<option value="SKT LTE 세이브">SKT LTE 세이브 / 33,000원</option>
+<option value="SKT 시니어 안심 4GB">SKT 시니어 안심 4GB / 22,000원</option>
+<option value="SKT 복지 5G 라이트">SKT 복지 5G 라이트 / 33,000원</option>
+<option value="KT 5G 스페셜">KT 5G 스페셜 / 100,000원</option>
+<option value="KT 5G 베이직">KT 5G 베이직 / 80,000원</option>
+<option value="KT 5G 심플 110GB">KT 5G 심플 110GB / 69,000원</option>
+<option value="KT 5G 심플 70GB">KT 5G 심플 70GB / 65,000원</option>
+<option value="KT 5G 심플 50GB">KT 5G 심플 50GB / 63,000원</option>
+<option value="KT 5G 심플 30GB">KT 5G 심플 30GB / 61,000원</option>
+<option value="KT 5G 슬림 21GB">KT 5G 슬림 21GB / 55,000원</option>
+<option value="KT 5G 슬림 14GB">KT 5G 슬림 14GB / 47,000원</option>
+<option value="KT 5G 슬림 10GB">KT 5G 슬림 10GB / 45,000원</option>
+<option value="KT 5G 슬림 4GB">KT 5G 슬림 4GB / 37,000원</option>
+<option value="KT 5G 슬림 이월 21GB">KT 5G 슬림 이월 21GB / 56,000원</option>
+<option value="KT 5G 슬림 이월 14GB">KT 5G 슬림 이월 14GB / 48,000원</option>
+<option value="KT LTE 데이터ON 프리미엄">KT LTE 데이터ON 프리미엄 / 89,000원</option>
+<option value="KT LTE 데이터ON 비디오">KT LTE 데이터ON 비디오 / 69,000원</option>
+<option value="KT LTE 데이터ON 톡">KT LTE 데이터ON 톡 / 49,000원</option>
+<option value="KT LTE 베이직">KT LTE 베이직 / 33,000원</option>
+<option value="KT LTE Y 무제한">KT LTE Y 무제한 / 69,000원</option>
+<option value="KT LTE Y 10GB">KT LTE Y 10GB / 49,000원</option>
+<option value="KT LTE Y 2.5GB">KT LTE Y 2.5GB / 33,000원</option>
+<option value="KT 시니어 베이직">KT 시니어 베이직 / 22,000원</option>
+<option value="KT 시니어 데이터안심">KT 시니어 데이터안심 / 33,000원</option>
+<option value="KT 복지 데이터안심">KT 복지 데이터안심 / 33,000원</option>
+<option value="KT 키즈 알 115">KT 키즈 알 115 / 28,000원</option>
+<option value="KT 군인 Y군인 77">KT 군인 Y군인 77 / 77,000원</option>
+<option value="KT 군인 Y군인 55">KT 군인 Y군인 55 / 55,000원</option>
+<option value="U+ 5G 시그니처">U+ 5G 시그니처 / 130,000원</option>
+<option value="U+ 5G 프리미어 슈퍼">U+ 5G 프리미어 슈퍼 / 115,000원</option>
+<option value="U+ 5G 프리미어 플러스">U+ 5G 프리미어 플러스 / 105,000원</option>
+<option value="U+ 5G 프리미어 레귤러">U+ 5G 프리미어 레귤러 / 95,000원</option>
+<option value="U+ 5G 프리미어 에센셜">U+ 5G 프리미어 에센셜 / 85,000원</option>
+<option value="U+ 5G 스탠다드">U+ 5G 스탠다드 / 75,000원</option>
+<option value="U+ 5G 데이터 슈퍼">U+ 5G 데이터 슈퍼 / 68,000원</option>
+<option value="U+ 5G 데이터 플러스">U+ 5G 데이터 플러스 / 61,000원</option>
+<option value="U+ 5G 라이트+">U+ 5G 라이트+ / 55,000원</option>
+<option value="U+ 5G 라이트">U+ 5G 라이트 / 47,000원</option>
+<option value="U+ 다이렉트 5G 69">U+ 다이렉트 5G 69 / 69,000원</option>
+<option value="U+ 다이렉트 5G 59">U+ 다이렉트 5G 59 / 59,000원</option>
+<option value="U+ 다이렉트 5G 51">U+ 다이렉트 5G 51 / 51,000원</option>
+<option value="U+ 다이렉트 5G 44">U+ 다이렉트 5G 44 / 44,000원</option>
+<option value="U+ LTE 프리미어 플러스">U+ LTE 프리미어 플러스 / 89,000원</option>
+<option value="U+ LTE 추가요금 걱정없는 데이터 69">U+ LTE 추가요금 걱정없는 데이터 69 / 69,000원</option>
+<option value="U+ LTE 추가요금 걱정없는 데이터 59">U+ LTE 추가요금 걱정없는 데이터 59 / 59,000원</option>
+<option value="U+ LTE 데이터 33">U+ LTE 데이터 33 / 33,000원</option>
+<option value="U+ 청소년 5G 라이트">U+ 청소년 5G 라이트 / 45,000원</option>
+<option value="U+ 키즈 5G">U+ 키즈 5G / 29,000원</option>
+<option value="U+ 시니어 5G 안심">U+ 시니어 5G 안심 / 45,000원</option>
+<option value="U+ 시니어 LTE 안심">U+ 시니어 LTE 안심 / 33,000원</option>
+<option value="U+ 복지 LTE 라이트">U+ 복지 LTE 라이트 / 22,000원</option>
+<option value="U+ 현역병 5G 55">U+ 현역병 5G 55 / 55,000원</option>
+<option value="U+ 태블릿 5G 4GB">U+ 태블릿 5G 4GB / 22,000원</option>
+<option value="알뜰 LTE 1GB 100분">알뜰 LTE 1GB 100분 / 3,900원</option>
+<option value="알뜰 LTE 3GB 200분">알뜰 LTE 3GB 200분 / 5,900원</option>
+<option value="알뜰 LTE 6GB 350분">알뜰 LTE 6GB 350분 / 9,900원</option>
+<option value="알뜰 LTE 7GB+1Mbps">알뜰 LTE 7GB+1Mbps / 19,800원</option>
+<option value="알뜰 LTE 10GB+1Mbps">알뜰 LTE 10GB+1Mbps / 22,000원</option>
+<option value="알뜰 LTE 11GB+2GB+3Mbps">알뜰 LTE 11GB+2GB+3Mbps / 33,000원</option>
+<option value="알뜰 LTE 15GB 350분">알뜰 LTE 15GB 350분 / 22,000원</option>
+<option value="알뜰 LTE 15GB+3Mbps">알뜰 LTE 15GB+3Mbps / 27,500원</option>
+<option value="알뜰 LTE 100GB+5Mbps">알뜰 LTE 100GB+5Mbps / 39,900원</option>
+<option value="알뜰 5G 9GB">알뜰 5G 9GB / 19,000원</option>
+<option value="알뜰 5G 30GB">알뜰 5G 30GB / 27,500원</option>
+<option value="알뜰 5G 50GB">알뜰 5G 50GB / 33,000원</option>
+<option value="알뜰 5G 100GB">알뜰 5G 100GB / 44,000원</option>
+<option value="알뜰 5G 무제한">알뜰 5G 무제한 / 55,000원</option>
+<option value="네버랩 5G 스타터">네버랩 5G 스타터 / 29,000원</option>
+<option value="네버랩 5G 라이트">네버랩 5G 라이트 / 39,000원</option>
+<option value="네버랩 5G 베이직">네버랩 5G 베이직 / 49,000원</option>
+<option value="네버랩 5G 스탠다드">네버랩 5G 스탠다드 / 59,000원</option>
+<option value="네버랩 5G 프리미엄">네버랩 5G 프리미엄 / 79,000원</option>
+<option value="네버랩 LTE 절약 1GB">네버랩 LTE 절약 1GB / 9,900원</option>
+<option value="네버랩 LTE 실속 5GB">네버랩 LTE 실속 5GB / 19,900원</option>
+<option value="네버랩 LTE 안심 10GB">네버랩 LTE 안심 10GB / 29,900원</option>
+<option value="네버랩 시니어 안심콜">네버랩 시니어 안심콜 / 14,900원</option>
+<option value="네버랩 복지할인 라이트">네버랩 복지할인 라이트 / 19,900원</option>
+<option value="네버랩 현역병 안심 55">네버랩 현역병 안심 55 / 55,000원</option>
+              </select>
+            </div>
+            <div>
+              <label>변경 방식</label>
+              <select id="planMode">
+                <option>즉시 변경</option>
+                <option>다음달 예약</option>
+              </select>
+            </div>
+            <button class="btn green" onclick="changePlan()">요금제 변경</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>부가서비스 관리</h2>
+          <div class="row">
+            <div><label>전화번호</label><input id="addonPhone" placeholder="010-1234-5678" /></div>
+            <div>
+              <label>부가서비스</label>
+              <select id="addonName">
+                <option>컬러링</option>
+                <option>데이터 쉐어링</option>
+                <option>통화중대기</option>
+                <option>소액결제 차단</option>
+                <option>국제전화 차단</option>
+                <option>로밍 차단</option>
+                <option>분실폰 위치조회</option>
+                <option>스팸차단</option>
+              </select>
+            </div>
+            <div>
+              <label>처리</label>
+              <select id="addonAction">
+                <option>가입</option>
+                <option>해지</option>
+              </select>
+            </div>
+            <button class="btn green" onclick="changeAddon()">처리</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>USIM/eSIM 재발급</h2>
+          <div class="row">
+            <div><label>전화번호</label><input id="simPhone" placeholder="010-1234-5678" /></div>
+            <div>
+              <label>종류</label>
+              <select id="simType">
+                <option>USIM</option>
+                <option>eSIM</option>
+              </select>
+            </div>
+            <div>
+              <label>사유</label>
+              <select id="simReason">
+                <option>분실/파손</option>
+                <option>단말 변경</option>
+                <option>eSIM 재발급</option>
+                <option>오류/인식불가</option>
+              </select>
+            </div>
+            <button class="btn green" onclick="reissueSim()">재발급</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="employees" class="section">
+        <div class="panel">
+          <h2>직원 권한 관리</h2>
+          <p class="sub">매니저 계정만 조회/변경 가능해.</p>
+          <div id="employeeTable"></div>
+        </div>
+      </section>
+
+      <section id="performance" class="section">
+        <div class="cards">
+          <div class="card"><div class="label-small">오늘 신청</div><div class="value" id="perfTodayApps">0</div></div>
+          <div class="card"><div class="label-small">전체 신청</div><div class="value" id="perfTotalApps">0</div></div>
+          <div class="card"><div class="label-small">미해결 티켓</div><div class="value" id="perfOpenTickets">0</div></div>
+          <div class="card"><div class="label-small">미납 청구</div><div class="value" id="perfUnpaidBills">0</div></div>
+        </div>
+        <div class="panel">
+          <h2>직원별 활동</h2>
+          <div id="perfEmployeeTable"></div>
+        </div>
+      </section>
+
       <section id="logs" class="section">
         <div class="panel">
           <h2>전체 로그</h2>
@@ -819,6 +1117,7 @@ th { background:#f9fafb; color:#6b7280; }
         document.getElementById(btn.dataset.section).classList.add("active");
         document.getElementById("pageTitle").textContent = btn.textContent;
         await refreshAll();
+        await refreshExtended();
       });
     });
 
@@ -860,6 +1159,330 @@ th { background:#f9fafb; color:#6b7280; }
       location.href="changephone.html";
     }
 
+
+    function safeDate(v) {
+      return v ? new Date(v).toLocaleString("ko-KR") : "";
+    }
+
+    function findCustomerByPhoneLocal(phone) {
+      return customers.find(c => c.phone === phone);
+    }
+
+    async function loadCustomerDetailByPhone() {
+      const phone = document.getElementById("detailPhone").value.trim();
+      if (!phone) return alert("전화번호를 입력해줘.");
+      await loadCustomers();
+      const customer = findCustomerByPhoneLocal(phone);
+      const el = document.getElementById("detailResult");
+      if (!customer) {
+        el.innerHTML = '<div class="empty">고객을 찾을 수 없어.</div>';
+        return;
+      }
+
+      const data = await api("/customers/" + encodeURIComponent(customer.id));
+      const c = data.customer;
+      const raw = data.rawCustomer || {};
+
+      el.innerHTML = `
+        <table>
+          <tr><th>고객명</th><td>${c.name}</td></tr>
+          <tr><th>전화번호</th><td>${c.phone}</td></tr>
+          <tr><th>요금제</th><td>${c.plan}</td></tr>
+          <tr><th>월 요금</th><td>${money(c.monthlyFee)}</td></tr>
+          <tr><th>상태</th><td>${c.status === "active" ? "정상" : "해지"}</td></tr>
+          <tr><th>미납</th><td>${c.unpaid ? "미납" : "정상"}</td></tr>
+          <tr><th>가입유형</th><td>${raw.joinType || "-"}</td></tr>
+          <tr><th>USIM/eSIM</th><td>${raw.usimType || "-"}</td></tr>
+          <tr><th>기기</th><td>${raw.device || "-"}</td></tr>
+          <tr><th>부가서비스</th><td>${(raw.addons || []).join(", ") || "-"}</td></tr>
+        </table>
+        <h2 style="margin-top:20px;">상담 이력</h2>
+        ${renderMiniTable(data.consultations, ["createdAt","employeeName","category","memo"])}
+        <h2 style="margin-top:20px;">장애/민원</h2>
+        ${renderMiniTable(data.tickets, ["createdAt","type","priority","status","memo"])}
+        <h2 style="margin-top:20px;">청구서</h2>
+        ${renderMiniTable(data.bills, ["billingMonth","amount","status","paidAt"])}
+      `;
+    }
+
+    function renderMiniTable(items, keys) {
+      if (!items || !items.length) return '<div class="empty">내역이 없어.</div>';
+      return `
+        <table>
+          <thead><tr>${keys.map(k => `<th>${k}</th>`).join("")}</tr></thead>
+          <tbody>
+            ${items.map(item => `
+              <tr>${keys.map(k => `<td>${k.toLowerCase().includes("at") ? safeDate(item[k]) : (item[k] ?? "")}</td>`).join("")}</tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function createConsultation() {
+      try {
+        await api("/consultations", {
+          method: "POST",
+          body: JSON.stringify({
+            phone: document.getElementById("consultPhone").value.trim(),
+            category: document.getElementById("consultCategory").value,
+            nextContactAt: document.getElementById("consultNext").value,
+            memo: document.getElementById("consultMemo").value.trim()
+          })
+        });
+        document.getElementById("consultMemo").value = "";
+        await loadConsultations();
+        await refreshAll();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadConsultations() {
+      const data = await api("/consultations");
+      const el = document.getElementById("consultTable");
+      if (!data.consultations.length) {
+        el.innerHTML = '<div class="empty">상담 이력이 없어.</div>';
+        return;
+      }
+      el.innerHTML = `
+        <table>
+          <thead><tr><th>시간</th><th>고객</th><th>전화번호</th><th>유형</th><th>내용</th><th>직원</th></tr></thead>
+          <tbody>
+            ${data.consultations.map(x => `
+              <tr><td>${safeDate(x.createdAt)}</td><td>${x.customerName}</td><td>${x.phone}</td><td>${x.category}</td><td>${x.memo}</td><td>${x.employeeName}</td></tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function createTicket() {
+      try {
+        await api("/tickets", {
+          method: "POST",
+          body: JSON.stringify({
+            phone: document.getElementById("ticketPhone").value.trim(),
+            type: document.getElementById("ticketType").value,
+            priority: document.getElementById("ticketPriority").value,
+            memo: document.getElementById("ticketMemo").value.trim()
+          })
+        });
+        document.getElementById("ticketMemo").value = "";
+        await loadTickets();
+        await refreshAll();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadTickets() {
+      const data = await api("/tickets");
+      const el = document.getElementById("ticketTable");
+      if (!data.tickets.length) {
+        el.innerHTML = '<div class="empty">접수된 티켓이 없어.</div>';
+        return;
+      }
+      el.innerHTML = `
+        <table>
+          <thead><tr><th>시간</th><th>고객</th><th>전화번호</th><th>유형</th><th>우선순위</th><th>상태</th><th>처리</th></tr></thead>
+          <tbody>
+            ${data.tickets.map(t => `
+              <tr>
+                <td>${safeDate(t.createdAt)}</td><td>${t.customerName}</td><td>${t.phone}</td><td>${t.type}</td><td>${t.priority}</td><td>${t.status}</td>
+                <td>
+                  <select onchange="updateTicket('${t.id}', this.value)">
+                    ${["접수","처리중","고객확인","완료"].map(s => `<option ${s===t.status?"selected":""}>${s}</option>`).join("")}
+                  </select>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function updateTicket(id, status) {
+      await api("/tickets/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ status }) });
+      await loadTickets();
+      await refreshAll();
+    }
+
+    async function loadApplications() {
+      const data = await api("/applications");
+      const el = document.getElementById("applicationTable");
+      if (!data.applications.length) {
+        el.innerHTML = '<div class="empty">신청 건이 없어.</div>';
+        return;
+      }
+      const states = ["접수중","신분증 확인","서명 완료","개통 대기","개통 완료","처리 완료","반려"];
+      el.innerHTML = `
+        <table>
+          <thead><tr><th>시간</th><th>유형</th><th>고객</th><th>전화번호</th><th>요금제/기기</th><th>상태</th><th>변경</th></tr></thead>
+          <tbody>
+            ${data.applications.map(a => `
+              <tr>
+                <td>${safeDate(a.createdAt)}</td><td>${a.type}</td><td>${a.name}</td><td>${a.phone}</td><td>${a.plan || a.device || ""}</td><td>${a.status}</td>
+                <td><select onchange="updateApplication('${a.id}', this.value)">
+                  ${states.map(s => `<option ${s===a.status?"selected":""}>${s}</option>`).join("")}
+                </select></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function updateApplication(id, status) {
+      await api("/applications/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ status }) });
+      await loadApplications();
+      await refreshAll();
+    }
+
+    async function generateBills() {
+      try {
+        const month = document.getElementById("billingMonth").value || new Date().toISOString().slice(0,7);
+        const data = await api("/billing/generate", { method: "POST", body: JSON.stringify({ billingMonth: month }) });
+        alert(data.message);
+        await loadBills();
+        await refreshAll();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadBills() {
+      const data = await api("/billing");
+      const el = document.getElementById("billTable");
+      if (!data.bills.length) {
+        el.innerHTML = '<div class="empty">청구서가 없어.</div>';
+        return;
+      }
+      el.innerHTML = `
+        <table>
+          <thead><tr><th>청구월</th><th>고객</th><th>전화번호</th><th>요금제</th><th>금액</th><th>상태</th><th>처리</th></tr></thead>
+          <tbody>
+            ${data.bills.map(b => `
+              <tr>
+                <td>${b.billingMonth}</td><td>${b.customerName}</td><td>${b.phone}</td><td>${b.plan}</td><td>${money(b.amount)}</td><td>${b.status}</td>
+                <td>${b.status === "납부완료" ? "-" : `<button class="btn green" onclick="payAdvancedBill('${b.id}')">납부 처리</button>`}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function payAdvancedBill(id) {
+      await api("/billing/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ status: "납부완료" }) });
+      await loadBills();
+      await refreshAll();
+    }
+
+    async function changePlan() {
+      try {
+        await api("/plan-change", {
+          method: "POST",
+          body: JSON.stringify({
+            phone: document.getElementById("planPhone").value.trim(),
+            newPlan: document.getElementById("planNew").value,
+            mode: document.getElementById("planMode").value
+          })
+        });
+        alert("요금제 변경 완료");
+        await refreshAll();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function changeAddon() {
+      try {
+        await api("/addons", {
+          method: "POST",
+          body: JSON.stringify({
+            phone: document.getElementById("addonPhone").value.trim(),
+            addon: document.getElementById("addonName").value,
+            action: document.getElementById("addonAction").value
+          })
+        });
+        alert("부가서비스 처리 완료");
+        await refreshAll();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function reissueSim() {
+      try {
+        await api("/usim-reissue", {
+          method: "POST",
+          body: JSON.stringify({
+            phone: document.getElementById("simPhone").value.trim(),
+            simType: document.getElementById("simType").value,
+            reason: document.getElementById("simReason").value
+          })
+        });
+        alert("재발급 처리 완료");
+        await refreshAll();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadEmployees() {
+      const el = document.getElementById("employeeTable");
+      try {
+        const data = await api("/employees");
+        el.innerHTML = `
+          <table>
+            <thead><tr><th>직원명</th><th>권한</th><th>가입일</th><th>변경</th></tr></thead>
+            <tbody>
+              ${data.employees.map(e => `
+                <tr>
+                  <td>${e.employeeName}</td><td>${e.role}</td><td>${safeDate(e.createdAt)}</td>
+                  <td>
+                    <select onchange="updateEmployeeRole('${e.id}', this.value)">
+                      <option value="staff" ${e.role==="staff"?"selected":""}>staff</option>
+                      <option value="manager" ${e.role==="manager"?"selected":""}>manager</option>
+                    </select>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        el.innerHTML = `<div class="empty">${err.message}</div>`;
+      }
+    }
+
+    async function updateEmployeeRole(id, role) {
+      try {
+        await api("/employees/" + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify({ role }) });
+        await loadEmployees();
+      } catch (err) { alert(err.message); }
+    }
+
+    async function loadPerformance() {
+      const data = await api("/branch-performance");
+      const p = data.performance;
+      document.getElementById("perfTodayApps").textContent = p.todayApplications;
+      document.getElementById("perfTotalApps").textContent = p.totalApplications;
+      document.getElementById("perfOpenTickets").textContent = p.openTickets;
+      document.getElementById("perfUnpaidBills").textContent = p.unpaidBills;
+
+      const el = document.getElementById("perfEmployeeTable");
+      if (!p.employees.length) {
+        el.innerHTML = '<div class="empty">활동 데이터가 없어.</div>';
+        return;
+      }
+      el.innerHTML = `
+        <table>
+          <thead><tr><th>직원</th><th>전체 로그</th><th>가입/개통 활동</th><th>티켓 활동</th></tr></thead>
+          <tbody>${p.employees.map(e => `<tr><td>${e.employeeName}</td><td>${e.logs}</td><td>${e.joins}</td><td>${e.tickets}</td></tr>`).join("")}</tbody>
+        </table>
+      `;
+    }
+
+    async function refreshExtended() {
+      const active = document.querySelector(".section.active")?.id;
+      if (active === "customerDetail") await loadConsultations();
+      if (active === "tickets") await loadTickets();
+      if (active === "applications") await loadApplications();
+      if (active === "advancedBilling") await loadBills();
+      if (active === "employees") await loadEmployees();
+      if (active === "performance") await loadPerformance();
+    }
+
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       try { await api("/logout", { method: "POST" }); } catch {}
       localStorage.removeItem(TOKEN_KEY);
@@ -868,6 +1491,7 @@ th { background:#f9fafb; color:#6b7280; }
 
     (async () => {
       await requireLogin();
+      const bm = document.getElementById("billingMonth"); if (bm) bm.value = new Date().toISOString().slice(0,7);
       await refreshAll();
     })();
   </script>
